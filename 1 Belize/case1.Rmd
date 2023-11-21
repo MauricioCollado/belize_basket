@@ -1,0 +1,175 @@
+---
+title: "cap is the indicator species MSY"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# erase
+rm(list = ls(all = TRUE)) 
+
+library(tidyverse)
+library(ggplot2)
+library(here)
+library(quadprog)
+library(future)
+library(ggbeeswarm)
+library(gghighlight)
+library(kableExtra)
+```
+
+```{r}
+# Where to save datasets
+fileplace <- "1 Belize"
+# Type of model, in this case we have the simple scenarios
+fileplace1 <- "case1"
+
+```
+
+# Inputs
+
+
+## Step 1: Input parameters
+
+```{r}
+
+# Technology arra
+
+qi1 <- 0.0008
+qi2 <- 0.001
+#qi3 <- 0.0006
+#qi4 <- 0.000874
+#qi5 <- 0.000874
+#qi6 <- 0.000874
+  
+qi7 <- 0
+  
+# 0.0001
+
+t1 <- c(t=1, q1 = qi1, q2 = qi2)
+t2 <- c(t=2, q1 = qi7, q2 = qi7)
+
+# Tech cost: t = tech, cost = cost per unit effort
+c1 <- c(t=1, cost=1)
+c2 <- c(t=2, cost=1)
+#c3 <- c(t=3, cost=1)
+#c4 <- c(t=4, cost=1)
+#c5 <- c(t=5, cost=1)
+#c6 <- c(t=6, cost=1)
+
+# Years
+years = 30
+
+# define base, max and min temp
+temp_min=19
+temp_max=26
+# temp = runif(years, min = temp_min, max = temp_max) 
+
+temp = c(24.96186, 22.78344, 23.18393, 21.37994, 21.63414, 22.50235, 21.18345, 25.96468, 
+         20.91578, 19.54157, 23.54480, 24.30295, 20.24743, 25.40967, 20.77083, 22.85526, 
+         21.43720, 25.29788, 19.55776, 23.66476, 24.93708, 23.00850, 24.87281, 23.02251, 
+         23.28070, 24.51235, 19.96620, 20.82423, 25.95001, 24.94559)
+
+
+temp_base=mean(unlist(temp))
+
+# define SST anomaly
+temp_anom=temp-temp_base
+
+# without normalization
+```
+
+# Step 2: basket quota
+
+```{r}
+
+# the following model will test what happens:
+# - when we group similar high r
+# - when we group similar low r
+# the rest of variables
+# Species:
+# s = species, r, K, X, p
+
+k1 <- 8156.8715 #analis
+k2 <- 163.63 #guttatus
+#k3 <- 522.7108
+#k4 <- 125.8112
+
+p1 <- 2590.2
+p2 <- 1914.21
+#p3 <- 1749.82
+#p4 <- 2398.5
+  
+
+s1 <- c(s=1, r=0.3, K=k1, X=k1*0.1, p=p1, tcoef=0) #analis
+s2 <- c(s=2, r=0.4045, K=k2, X=k2*0.1, p=p2, tcoef=0) #guttatus
+
+ 
+# cap
+cap1 <- 612.28
+cap2 <- 16.54
+#cap3 <- 20.60
+#cap4 <- 6.423
+
+indi_cap = cap1
+
+# Baskets: binary matrix of # species x # baskets, where 1 means that species is in that basket
+
+#baskets
+# basket bundles 1
+b1 <- c(s1 = 1, s2 = 1)
+
+#cap_b1 <- list(b1)
+#baskets_arr <- as.matrix(as.data.frame(do.call(rbind, cap_b1)))
+cap1 <- indi_cap
+
+mortguess1= cap1
+
+```
+
+# Step 3: make a list of the inputs
+```{r}
+# Change these to reflect the number of species and technologies above:
+species = list(s1, s2)
+tech = list(t1, t2)
+cost = list(c1, c2)
+baskets = list(b1)
+
+#sp_df <- as.data.frame(do.call(rbind, species))
+#tech_df <- as.data.frame(do.call(rbind, tech))
+#cost_df <- as.data.frame(do.call(rbind, cost))
+#baskets_df <- as.data.frame(do.call(rbind, baskets))
+
+```
+
+
+# Step 4: Run the function
+```{r}
+# load function
+source(here("functions_cc_fixed", "optimal_baskets_cc.R"))
+source(here("functions_cc_fixed", "qb_stock_m_cc.R"))
+```
+
+## BASE SCENARIO RESULTS
+```{r}
+output <- optimal_baskets(species, tech, cost, baskets, mort_guess=mortguess1, years)
+
+#Revenue
+NPV <- sum(drop_na(output$profit_per_t))
+
+csvname <- "NPVs_1b.csv"
+csvfile <- paste(csvname, sep="")
+
+write.table(na.omit(NPV),here(fileplace, fileplace1,"results", csvfile),
+              row.names=FALSE, sep=",")
+
+# file names
+csvname <- "output_1b.csv"
+csvfile <- paste(csvname, sep="")
+
+
+write.table(na.omit(output),here(fileplace, fileplace1,"results", csvfile),
+              row.names=FALSE, sep=",")
+
+```
+

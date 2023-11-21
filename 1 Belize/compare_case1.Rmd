@@ -1,0 +1,364 @@
+---
+title: "Results: comparison"
+author: "Mauricio Collado"
+output: html_document
+---
+```{r}
+# erase
+rm(list = ls(all = TRUE)) 
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, echo=FALSE)
+
+library(tidyverse)
+library(here)
+library(scales)
+library(gridExtra)
+library(grid)
+library(kableExtra)
+library(ggtext)
+library(dplyr)
+```
+
+
+# 1. File location
+
+```{r}
+# Where to save datasets
+fileplace <- "1 Belize"
+# Type of model, in this case we have the simple scenarios
+fileplace1 <- "case1"
+
+```
+
+## 1.1 Read files
+
+```{r}
+# base directory
+df <- read_csv(here(fileplace, fileplace1, "results","output_1b.csv"))
+
+#read single species file
+single <- read_csv(here("2 single_sp", "2species_gillnet", "results","2spe_single.csv"))
+
+single <- slice(single, 1:(n() - 20)) %>% 
+  select(9:10) %>% 
+  mutate(year = seq(0,30))
+
+
+```
+
+```{r}
+# MSY inputs
+
+# additional data. 
+# NOTE: this applies if every species hjave the same K
+
+
+k1 <- 8156.8715 #analis
+k2 <- 163.63 #guttatus
+BMSY1=0.5*k1
+BMSY2=0.5*k2
+
+#MSY6=0.5*k6
+
+msy_thresh=0.99999
+years=30
+
+```
+
+### 1.1.1 Read no CC scenario
+```{r}
+
+
+# the subscenario is base, it means no CC
+subscenario <- "No CC"
+
+# general output files
+# sc means the basket arrangement. b means the base scenario
+output_sc1_b <- df %>% 
+  mutate(run = "Scenario 1",
+         analysis = "low basket + high basket",
+         key_variable = subscenario,
+         year = seq(0,30),
+         bmsy1=stock.s_1/BMSY1,
+         bmsy2=stock.s_2/BMSY2,
+         #msy3=stock.s_3/MSY3,
+         #msy4=stock.s_4/MSY4,
+         #msy5=stock.s_5/MSY5,
+         #msy6=stock.s_6/MSY6,
+         bmsy1p=0,
+         bmsy2p=0,
+         #bmsy3p=0
+         #msy4p=0,
+         #msy5p=0,
+         #msy6p=0
+         )
+
+
+
+#Group them
+all_outputs <- output_sc1_b  %>% 
+  mutate(tot_profits = profit_per_t.t_1+profit_per_t.t_2, tot_stock=stock.s_1+stock.s_1)
+
+```
+
+
+```{r}
+
+# create msy indicator function
+#create indicator of reaching MSY
+
+all_outputs$bmsy1p<-ifelse(all_outputs$bmsy1>msy_thresh, 1, all_outputs$bmsy1p)
+all_outputs$bmsy2p<-ifelse(all_outputs$bmsy2>msy_thresh, 1, all_outputs$bmsy2p)
+#all_outputs$msy3p<-ifelse(all_outputs$msy3>msy_thresh, 1, all_outputs$msy3p)
+#all_outputs$msy4p<-ifelse(all_outputs$msy4>msy_thresh, 1, all_outputs$msy4p)
+#all_outputs$msy5p<-ifelse(all_outputs$msy5>msy_thresh, 1, all_outputs$msy5p)
+#all_outputs$msy6p<-ifelse(all_outputs$msy6>msy_thresh, 1, all_outputs$msy6p)
+
+```
+
+# 2. Bio trend
+
+```{r}
+
+#########################################################
+# graph
+
+abio1 <- ggplot(data = all_outputs, aes(x=year))+
+  geom_line(aes(y=stock.s_1), color = "red", size=1)+
+  #geom_line(aes(y=stock.s_2), color = "blue", size=1)+
+  #geom_line(aes(y=stock.s_3), color = "green", size=1)+
+  #geom_line(aes(y=stock.s_4), color = "orange", size=1)+
+  #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
+  #geom_line(aes(y=stock.s_6), color = "black", size=1)+
+  #geom_line(aes(y=stock.s_3), color = "black", size=1)+
+  labs(title="1 basket, species 1",
+       y= "Stock",
+       x= "year")+
+    expand_limits(y = 0)+
+  theme_bw(base_size = 12) +
+  theme(
+        strip.background = element_rect(fill="white"),
+              axis.ticks.length = unit(-0.05, "in"),
+              axis.text.y = element_text(margin=unit(c(0.3,0.3,0.3,0.3), "cm")),
+              axis.text.x = element_markdown(margin=unit(c(0.3,0.3,0.3,0.3), "cm")),
+        
+        )+
+  theme(legend.position = "bottom")
+
+abio1
+
+abio2 <- ggplot(data = all_outputs, aes(x=year))+
+  #geom_line(aes(y=stock.s_1), color = "red", size=1)+
+  geom_line(aes(y=stock.s_2), color = "blue", size=1)+
+  #geom_line(aes(y=stock.s_3), color = "green", size=1)+
+  #geom_line(aes(y=stock.s_4), color = "orange", size=1)+
+  #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
+  #geom_line(aes(y=stock.s_6), color = "black", size=1)+
+  #geom_line(aes(y=stock.s_3), color = "black", size=1)+
+  labs(title="1 basket, species 2",
+       y= "Stock",
+       x= "year")+
+    expand_limits(y = 0)+
+  theme_bw(base_size = 12) +
+  theme(
+        strip.background = element_rect(fill="white"),
+              axis.ticks.length = unit(-0.05, "in"),
+              axis.text.y = element_text(margin=unit(c(0.3,0.3,0.3,0.3), "cm")),
+              axis.text.x = element_markdown(margin=unit(c(0.3,0.3,0.3,0.3), "cm")),
+        
+        )+
+  theme(legend.position = "bottom")
+
+abio2
+
+```
+
+
+
+# 3. Revenue
+
+```{r}
+#########################################################
+# graph
+
+
+rev1 <- ggplot(data = all_outputs, aes(y=rev_per_sp.s_2, x=year, group=key_variable, color=key_variable))+
+  geom_line(size=1)+
+  labs(title="Revenue species 1",
+       y= "Revenue",
+       x= "year")+
+  theme_bw(base_size = 12) +
+  theme(
+        strip.background = element_rect(fill="white"),
+              axis.ticks.length = unit(-0.05, "in"),
+              axis.text.y = element_text(margin=unit(c(0.3,0.3,0.3,0.3), "cm")),
+              axis.text.x = element_markdown(margin=unit(c(0.3,0.3,0.3,0.3), "cm")),
+        
+        )
+
+rev1
+
+rev2 <- ggplot(data = all_outputs, aes(y=rev_per_sp.s_2, x=year, group=key_variable, color=key_variable))+
+  geom_line(size=1)+
+  labs(title="Revenue species 2",
+       y= "Revenue",
+       x= "year")+
+  theme_bw(base_size = 12) +
+  theme(
+        strip.background = element_rect(fill="white"),
+              axis.ticks.length = unit(-0.05, "in"),
+              axis.text.y = element_text(margin=unit(c(0.3,0.3,0.3,0.3), "cm")),
+              axis.text.x = element_markdown(margin=unit(c(0.3,0.3,0.3,0.3), "cm")),
+        
+        )
+
+rev2
+
+
+```
+
+
+# 9. Biology success
+
+```{r}
+#basket arrangement 1
+
+bio_same <- drop_na(all_outputs)
+
+bio_same <- bio_same %>%
+  group_by(key_variable) %>%
+  summarise(s1=sum((bmsy1p))/years,
+            s2=sum((bmsy2p))/years,
+            #s3=sum((msy3p))/years,
+            #s4=sum((msy4p))/years,
+            #s5=sum((msy5p))/years,
+            #s6=sum((msy6p))/years,
+            .groups = 'drop'
+            )  
+
+bios_all <- bio_same
+
+#png(here(fileplace1, fileplace,"tables", "bio_success.png"), width=480,height=480,bg = "white")
+#grid.table(bios_all)
+#dev.off()
+
+write.table(na.omit(bios_all),here(fileplace, fileplace1,"results", "lut_gut.csv"),
+              row.names=FALSE, sep=",")
+
+```
+# 10. Revenue ratio 
+
+```{r}
+# left join
+
+all_rev <- left_join(all_outputs,single, by="year")
+
+all_rev <- all_rev %>% 
+  select(year, key_variable, 9,10,21,22) 
+
+all_rev  <- drop_na(all_rev)
+
+all_rev <- all_rev %>% 
+  mutate(rev1=rev_per_sp.s_1.x/rev_per_sp.s_1.y,
+         rev2=rev_per_sp.s_2.x/rev_per_sp.s_2.y,
+         #rev3=rev_per_sp.s_3.x/rev_per_sp.s_3.y,
+         #rev4=rev_per_sp.s_4.x/rev_per_sp.s_4.y,
+         #rev5=rev_per_sp.s_5.x/rev_per_sp.s_5.y,
+         #rev6=rev_per_sp.s_6.x/rev_per_sp.s_6.y,
+         rev1p=0,
+         rev2p=0)
+         #rev3p=0)
+         #rev4p=0,
+         #rev5p=0,
+         #rev6p=0)
+
+# create msy indicator function
+#create indicator of reaching MSY
+
+all_rev$rev1p<-ifelse(all_rev$rev1>msy_thresh, 1, all_rev$rev1p)
+all_rev$rev2p<-ifelse(all_rev$rev2>msy_thresh, 1, all_rev$rev2p)
+#all_rev$rev3p<-ifelse(all_rev$rev3>msy_thresh, 1, all_rev$rev3p)
+#all_rev$rev4p<-ifelse(all_rev$rev4>msy_thresh, 1, all_rev$rev4p)
+#all_rev$rev5p<-ifelse(all_rev$rev5>msy_thresh, 1, all_rev$rev5p)
+#all_rev$rev6p<-ifelse(all_rev$rev6>msy_thresh, 1, all_rev$rev6p)
+
+
+
+```
+
+
+## 10.1 Ratio of accumulated revenues
+
+```{r}
+all_rev1 <- all_rev  %>%
+  group_by(key_variable) %>%
+  summarise(s1=sum((rev_per_sp.s_1.x)),
+            s2=sum((rev_per_sp.s_2.x)),
+            #s3=sum((rev_per_sp.s_3.x)),
+            #s4=sum((rev_per_sp.s_4.x)),
+            #s5=sum((rev_per_sp.s_5.x)),
+            #s6=sum((rev_per_sp.s_6.x)),
+            .groups = 'drop'
+            )  
+
+single <- drop_na(single)
+
+rev_single <- single %>%
+  summarise(s1=sum((rev_per_sp.s_1)),
+            s2=sum((rev_per_sp.s_2))
+            #s3=sum((rev_per_sp.s_3))
+            #s4=sum((rev_per_sp.s_4)),
+            #s5=sum((rev_per_sp.s_5)),
+            #s6=sum((rev_per_sp.s_6)),
+            ) 
+
+
+all_rev1$s1 <- all_rev1$s1/rev_single$s1
+all_rev1$s2 <- all_rev1$s2/rev_single$s2
+#all_rev1$s3 <- all_rev1$s3/rev_single$s3
+#all_rev1$s4 <- all_rev1$s4/rev_single$s4
+#all_rev1$s5 <- all_rev1$s5/rev_single$s5
+#all_rev1$s6 <- all_rev1$s6/rev_single$s6
+
+#png(here(fileplace1, fileplace,"tables", "rev_success2.png"), width=1080,height=480,bg = "white")
+#grid.table(all_rev1)
+#dev.off()
+
+write.table(na.omit(bios_all),here(fileplace, fileplace1,"results", "lut_gut_rev.csv"),
+              row.names=FALSE, sep=",")
+```
+
+
+# 11. Save graphs
+
+```{r}
+
+#general graphs
+ggsave(plot = abio1, filename = here(fileplace, fileplace1, "figures", "species_results.png"), height = 5, width = 8)
+ggsave(plot = abio2, filename = here(fileplace, fileplace1, "figures", "species_results.png"), height = 5, width = 8)
+
+#rev
+
+msylist <- c("rev1", "rev2")
+#msylist <- as.list(msylist)
+
+for(y in 1:length(msylist)){ 
+  #filename = paste("msy_", y,".png", sep="")
+ # plot1 <- msylist[[y]]
+  ggsave(plot = get(msylist[y]), filename = here(fileplace, fileplace1,"figures", file=paste0("rev", y ,".png")), height = 5, width = 8)
+}
+
+rev_graph <- gridExtra::grid.arrange(rev1,
+                                     rev2,
+                                     #rev3,
+                                     #rev4,
+                                     #rev5,
+                                     #rev6,
+                                     ncol=2)
+
+ggsave(plot = rev_graph, filename = here(fileplace, fileplace1, "figures", "all_rev.png"), height = 5, width = 8)
+
+```
+

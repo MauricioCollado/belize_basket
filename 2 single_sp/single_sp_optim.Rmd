@@ -1,0 +1,234 @@
+---
+title: "single_sp_opt"
+output: html_document
+---
+
+
+# 1. Optimization function
+This function should converge at r/2
+
+```{r}
+k1 <- 8156.8715 #analis
+k2 <- 163.63 #guttatus
+#k3 <- 522.7108
+#k4 <- 125.8112
+
+p1 <- 2590.2
+p2 <- 1914.21
+#p3 <- 1749.82
+#p4 <- 2398.5
+
+r1 <- 0.3
+r2 <- 0.4045
+  
+
+```
+
+
+```{r}
+
+# This finds the optimal steady state harvest point for each individual species
+# It includes a minimum viable biomass
+
+FishOpt_GS<-function(bvec,K,g,p,cost,beta,disc,tol=.1, t_end = 300){
+  # K: carrying capacity
+  # bvec: biomass vector
+  # g: 
+  # p: price
+  # beta: power indicating the fisheries is more difficult
+  # cost: cost
+  # disc: discount rate
+  # t_end: # of periods or years
+  # tol: tolerance check for the bellman equation convergence
+  
+  # set discount factor
+  delta=1/(1+disc)
+  #Optim objective function
+  Objective<-function(f,b,bvec,K,gar,p,cost,beta,delta,V){
+    r<-gar #intrinsic growth
+    bnext = max(min(bvec), b + r*b*(1-b/K) - f)
+    bnext = min(max(bvec), bnext) #Make sure we don't go below the minimum biomass
+    profit=p*f-cost*f^beta
+    Vnext = spline(x=bvec,y=V,xout=bnext) #interpolation of the value function
+    negout = -(profit + delta*Vnext$y) # bellman equation
+    return(negout) # Negative profits
+  }
+  #Set up storage vectors and initial loop parameters
+  tolcheck=10*tol
+  t=0 #time vector
+  Vstar=rep(0,length.out=length(bvec)) #optimal value 
+  f=rep(1,length.out=length(bvec))
+  #While iterate until convergence
+  while(t<4|tolcheck>tol){ #
+  t=t+1 #accumulate time
+  V=Vstar #keep vstar
+  pastf=f
+  #Loop over states
+  for(i in 1:length(bvec)){
+  b=bvec[i]
+  if(i==1){
+  guess=0
+  }else{
+  guess=f[i-1]
+  }
+  low=0.00001 ## If you get error in optim finite fn convergence issues, changes this to something positive but REALLY small 0.00001
+  high=(b + g*b*(1-b/K)) #Max possible harvest is the available fish plus the growth
+  Opt=optim(par=guess,fn=Objective,lower=low,upper=high,method = "L-BFGS-B",b=b,bvec=bvec,gar=g,cost=cost,K=K,p=p,V=V,beta=beta,delta=delta)
+  f[i]=Opt$par
+  Vstar[i]=-Opt$value
+  }
+  #Check tolerance in each time period, this is policy function convergence, no check for value function convergence
+  tolcheck=sum(abs(f-pastf))
+  if(t>t_end){
+    print("Exceed Maximum time steps with tolerance remaining:")
+    print(tolcheck)
+    break
+  }
+  converge=c(t,tolcheck)
+  }
+  return(list(Policy=f,Value=Vstar,converge=converge))
+}
+```
+
+
+# 2. PMAP test
+```{r}
+##### Define your fishery parameters and run your QB model for all other combinations up to this point ####
+## Run the optimization to get policy functions ##
+#Each element of these lists correspond to each fishery. For example the first list element in Klist is the carrying capacity for fishery 1 as is the first element in rlist for fishery 1 etc.
+
+# set 3 species with different biomass ranges. Take 50 samples
+bveclist=list(seq(0,k1,length.out=50),seq(0,k2,length.out=50))
+
+# set 3 carrying capacities
+Klist=list(k1,k2)
+
+# set 3 intrinsic growth
+rlist=list(r1, r2)
+
+# set 3 prices
+plist=list(p1, p2)
+
+# set 3 costs
+costlist=list(1, 1)
+
+# set 3 cost power
+betalist=list(2,2)
+
+# set 3 discount rate
+disclist=list(0,0)
+
+# pmap each list to run the optim for each one. (How to do this for technology arrays?)
+optimal_output=pmap(list(bveclist,Klist,rlist,plist,costlist,betalist,disclist),FishOpt_GS)
+
+optimal_output
+```
+
+# 3. Quota basket test 
+
+# 3.1 Quota basket test 1
+
+```{r}
+# Input parameters 
+
+# Species:
+# s = species, r, K, X, p
+
+s1 <- c(s=1, r=r1, K=k1, X=k1*0.1, p1=p1, tcoef=0) #analis
+s2 <- c(s=2, r=r2, K=k2, X=k2*0.1, p2=p2, tcoef=0) #guttatus
+
+# t = tech, q1 = catchability species 1, q2 = catchability species 2...
+
+qi1 <- 0.0008
+qi2 <- 0.001
+#qi3 <- 0.0006
+#qi4 <- 0.000874
+#qi5 <- 0.000874
+#qi6 <- 0.000874
+  
+qi7 <- 0
+  
+t1 <- c(t=1, q1 = qi1, q2 = qi7)
+t2 <- c(t=2, q1 = qi7, q2 = qi2)
+
+
+# Tech cost: t = tech, cost = cost per unit effort
+c1 <- c(t=1, cost=1)
+c2 <- c(t=2, cost=1)
+
+# Baskets: bimary matrix of # species x # baskets, where 1 means that species is in that basket
+
+b1 <- c(s1 = 1, s2 = 0)
+b2 <- c(s1 = 0, s2 = 1)
+
+# Quotas: position = basket, number is the harvest limit.
+# We want this to be 0.1 of the preceding stock under constant mortality, so this will have to change to just input constant m.
+
+mortality = 0.1
+
+# Years
+years = 50
+```
+
+# Step 2: make a list of the inputs
+```{r}
+# Change these to reflect the number of species and technologies above:
+species = list(s1, s2)
+tech = list(t1, t2)
+cost = list(c1, c2)
+baskets = list(b1, b2)
+```
+
+```{r}
+sp_df <- as.data.frame(do.call(rbind, species))
+tech_df <- as.data.frame(do.call(rbind, tech))
+cost_df <- as.data.frame(do.call(rbind, cost))
+baskets_df <- as.data.frame(do.call(rbind, baskets))
+```
+
+
+```{r}
+
+# biomass samples
+bveclist=list(seq(0.1,sp_df$K[1],length.out=50), 
+              seq(0.1,sp_df$K[2],length.out=50))
+
+#k
+Klist=as.list(sp_df$K)
+
+# r
+rlist=as.list(sp_df$r)
+
+#prices
+plist=as.list(sp_df$p)
+
+# costs
+costlist=list(1, 
+              1)
+
+# beta
+betalist=list(2,
+              2)
+
+# discount rate
+disclist=list(0,
+              0)
+
+optimal_output=pmap(list(bveclist,Klist,rlist,plist,costlist,betalist,disclist),FishOpt_GS)
+
+optimal_output
+
+
+# other test
+
+#run300 <- FishOpt_GS(seq(0, 100, length.out = 50), 100, 0.8, p = 200, c = 10, beta = 2, disc = 0, tol = 0.1, t_end = 300)
+
+#run305 <- FishOpt_GS(seq(0, 100, length.out = 50), 100, 0.2, p = 200, c = 10, beta = 2, disc = 0, t_end = 305)
+
+
+#run20=pmap(list(bveclist,Klist,rlist,plist,costlist,betalist,disclist),FishOpt_GS)
+```
+
+
+
+
