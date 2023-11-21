@@ -326,7 +326,7 @@ all_rev1$s2 <- all_rev1$s2/rev_single$s2
 #grid.table(all_rev1)
 #dev.off()
 
-write.table(na.omit(bios_all),here(fileplace, fileplace1,"results", "lut_gut_rev.csv"),
+write.table(na.omit(all_rev1),here(fileplace, fileplace1,"results", "lut_gut_rev.csv"),
               row.names=FALSE, sep=",")
 ```
 
@@ -336,8 +336,8 @@ write.table(na.omit(bios_all),here(fileplace, fileplace1,"results", "lut_gut_rev
 ```{r}
 
 #general graphs
-ggsave(plot = abio1, filename = here(fileplace, fileplace1, "figures", "species_results.png"), height = 5, width = 8)
-ggsave(plot = abio2, filename = here(fileplace, fileplace1, "figures", "species_results.png"), height = 5, width = 8)
+ggsave(plot = abio1, filename = here(fileplace, fileplace1, "figures", "species_results1.png"), height = 5, width = 8)
+ggsave(plot = abio2, filename = here(fileplace, fileplace1, "figures", "species_results2.png"), height = 5, width = 8)
 
 #rev
 
