@@ -28,7 +28,7 @@ library(dplyr)
 # Where to save datasets
 fileplace <- "1 Belize"
 # Type of model, in this case we have the simple scenarios
-fileplace1 <- "case1"
+fileplace1 <- "case2"
 
 ```
 
@@ -128,7 +128,7 @@ all_outputs$bmsy2p<-ifelse(all_outputs$bmsy2>msy_thresh, 1, all_outputs$bmsy2p)
 title1 <- "Stock Mutton Snapper (Lutjanus analis) "
 title2 <- "Stock Red Jind (Epinephelus guttatus)"
 
-subtitle1 <- "1 basket, 2 species, 1 gear type, fixed quota "
+subtitle1 <- "1 basket, 2 species, 1 gear type, optimal path"
 
 abio1 <- ggplot(data = all_outputs, aes(x=year))+
   geom_line(aes(y=stock.s_1), color = "red", size=1)+
