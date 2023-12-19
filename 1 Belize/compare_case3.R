@@ -99,7 +99,6 @@ output_base <- df_col %>%
 all_outputs <- output_base  %>% 
   mutate(tot_profits = profit_per_t.t_1 + profit_per_t.t_2, 
          tot_stock = stock.s_1 + stock.s_2,
-         Label = ifelse(year == 30, id, NA),
          cpue1_1 = harvest.s_1/effort.t_1,
          cpue2_1 = harvest.s_2/effort.t_1) %>% 
   mutate(id2 = case_when(id == "01" ~ "010",
@@ -120,7 +119,8 @@ all_outputs <- output_base  %>%
                          id == "15" ~ "150"),
          id2=ifelse(is.na(id2), id, id2),
          id = id2) %>% 
-  select(-id2)
+  select(-id2)%>% 
+  mutate(Label = ifelse(year == 30, id, NA))
 
 
 # create msy indicator function
@@ -457,5 +457,5 @@ bio_all <- bio_all %>%
   ) %>% 
   ungroup()
 
-write.table(na.omit(bio_all), here(fileplace, fileplace1,"results", "lut_gut.csv"),
+write.table(na.omit(bio_all), here(fileplace, fileplace1,"tables", "lut_gut.csv"),
             row.names=FALSE, sep=",")
