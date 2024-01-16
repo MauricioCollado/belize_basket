@@ -1,7 +1,8 @@
 ###### Different progress for each limit
 ###### Code by Mauricio Collado
 
-###### Compare progress for each harvest limit
+###### Compare progress for each harvest SUM limit
+#####
 
 # erase
 rm(list = ls(all = TRUE)) 
@@ -21,7 +22,7 @@ library(ggrepel)
 # Where to save datasets
 fileplace <- "1 Belize"
 # Type of model, in this case we have the simple scenarios
-fileplace1 <- "case5"
+fileplace1 <- "case8.8"
 fileplace2 <- "figures"
 
 ########################################################################
@@ -57,36 +58,9 @@ df_col <- df %>%
 ########################################################################
 # optimal path
 
-mortguess1 <- c(0.00001,
-                0.00001,
-                0.00001,
-                0.00001,
-                0.00001,
-                0.00001,
-                0.00001,
-                63.52840626,
-                321.7904004,
-                451.5504848,
-                518.8416954,
-                554.3876054,
-                573.3609044,
-                583.5467967,
-                589.0324205,
-                591.9917899,
-                593.5897917,
-                594.4531175,
-                594.9196596,
-                595.1718167,
-                595.3081137,
-                595.3817887,
-                595.4216145,
-                595.443143,
-                595.4547807,
-                595.4610717,
-                595.4644724,
-                595.4663108,
-                595.4673045,
-                595.4678418)
+mortguess1 <- c(0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 24.23, 385.96, 561.46, 612, 
+                612, 612, 612, 612, 612, 612, 612, 612, 612, 612,612, 612, 612, 612, 612, 
+                612, 612, 612, 612, 612, 612)
 
 year_mort <- seq(1,30, 1)
 
@@ -121,7 +95,7 @@ years=30
 # seq(0,30)
 
 output_base <- df_col %>% 
-  mutate(year = rep(seq(0,30), times=30),
+  mutate(year = rep(seq(0,30), times=20),
          bmsy1=stock.s_1/BMSY1,
          bmsy2=stock.s_2/BMSY2,
          #msy3=stock.s_3/MSY3,
@@ -155,16 +129,17 @@ all_outputs <- output_base  %>%
                          id == "08" ~ "080",
                          id == "09" ~ "090",
                          id == "01" ~ "010",
-                         id == "1" ~ "100",
-                         id == "11" ~ "110",
-                         id == "12" ~ "120",
-                         id == "13" ~ "130",
-                         id == "14" ~ "140",
-                         id == "15" ~ "150"),
+                         id == "1" ~ "100"),
+                         #id == "11" ~ "110",
+                         #id == "12" ~ "120",
+                         #id == "13" ~ "130",
+                         #id == "14" ~ "140",
+                         #id == "15" ~ "150"),
          id2=ifelse(is.na(id2), id, id2),
          id = id2) %>% 
   select(-id2) %>% 
-  mutate(Label = ifelse(year == 30, id, NA))
+  mutate(Label = ifelse(year == 30, id, NA),
+         Label1 = ifelse(year == 1, id, NA))
 
 
 # create msy indicator function
@@ -269,7 +244,7 @@ rev1 <- ggplot(data = all_outputsr, aes(x=year, y=rev_per_sp.s_1, color=id))+
   #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
   #geom_line(aes(y=stock.s_6), color = "black", size=1)+
   #geom_line(aes(y=stock.s_3), color = "black", size=1)+
-  geom_label(aes(label = Label), nudge_x = 0.35, size = 1)+ 
+  geom_label(aes(label = Label1), nudge_x = 0.35, size = 1)+ 
   labs(title=title1rev,
        subtitle=subtitle1,
        y= "Revenue $",
@@ -289,7 +264,7 @@ rev2 <- ggplot(data = all_outputsr, aes(x=year, y=rev_per_sp.s_2, color=id))+
   #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
   #geom_line(aes(y=stock.s_6), color = "black", size=1)+
   #geom_line(aes(y=stock.s_3), color = "black", size=1)+
-  geom_label(aes(label = Label), nudge_x = 0.35, size = 1)+ 
+  geom_label(aes(label = Label1), nudge_x = 0.35, size = 1)+ 
   labs(title=title2rev,
        subtitle=subtitle1,
        y= "Revenue $",
@@ -328,7 +303,7 @@ har1 <- ggplot()+
   #geom_line(aes(y=stock.s_6), color = "black", size=1)+
   #geom_line(aes(y=stock.s_3), color = "black", size=1)+
   geom_point(data=optim_path, aes(x=year, y=harvest.s_1), size=1) +
-  geom_label(data = all_outputsr, aes(x=year, y=harvest.s_1, label = Label, alpha=0.1), nudge_x = 0.35, size = 1)+ 
+  geom_label(data = all_outputsr, aes(x=year, y=harvest.s_1, label = Label1, alpha=0.1), nudge_x = 0.35, size = 1)+ 
   labs(title=title1har,
        subtitle=subtitle1,
        y= "Stock",
@@ -348,7 +323,7 @@ har2 <- ggplot(data = all_outputsr, aes(x=year, y=harvest.s_2, color=id))+
   #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
   #geom_line(aes(y=stock.s_6), color = "black", size=1)+
   #geom_line(aes(y=stock.s_3), color = "black", size=1)+
-  geom_label(aes(label = Label), nudge_x = 0.35, size = 1)+ 
+  geom_label(aes(label = Label1), nudge_x = 0.35, size = 1)+ 
   labs(title=title2har,
        subtitle=subtitle1,
        y= "Harvest",
@@ -374,7 +349,7 @@ for(y in 1:length(msylist)){
 ########################################################################
 ### CPUE
 
-title1ef <- "Effort (30y) gillnets on gillnets"
+title1ef <- "Effort (30y) on gillnets"
 title2ef <- "Effort (30y) on NONE technology"
 
 eff1 <- ggplot(data = all_outputs, aes(x=year, y=effort.t_1, color=id))+
@@ -385,7 +360,7 @@ eff1 <- ggplot(data = all_outputs, aes(x=year, y=effort.t_1, color=id))+
   #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
   #geom_line(aes(y=stock.s_6), color = "black", size=1)+
   #geom_line(aes(y=stock.s_3), color = "black", size=1)+
-  geom_label(aes(label = Label), nudge_x = 0.35, size = 1)+ 
+  geom_label(aes(label = Label1), nudge_x = 0.35, size = 1)+ 
   labs(title=title1ef,
        subtitle=subtitle1,
        y= "Effort",
@@ -405,7 +380,7 @@ eff2 <- ggplot(data = all_outputs, aes(x=year, y=effort.t_2, color=id))+
   #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
   #geom_line(aes(y=stock.s_6), color = "black", size=1)+
   #geom_line(aes(y=stock.s_3), color = "black", size=1)+
-  geom_label(aes(label = Label), nudge_x = 0.35, size = 1)+ 
+  geom_label(aes(label = Label1), nudge_x = 0.35, size = 1)+ 
   labs(title=title2ef,
        subtitle=subtitle1,
        y= "Effort",
@@ -489,7 +464,7 @@ for(y in 1:length(msylist)){
 ### biomass indicator
 
 bio_all <- all_outputs %>% 
-  select(-Label)
+  select(-Label, -Label1)
   
 bio_all <- drop_na(bio_all)
 

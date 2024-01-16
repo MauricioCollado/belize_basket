@@ -1,7 +1,8 @@
 ###### Different progress for each limit
 ###### Code by Mauricio Collado
 
-###### Compare progress for each harvest limit
+###### Compare progress for each harvest SUM limit
+#####
 
 # erase
 rm(list = ls(all = TRUE)) 
@@ -21,7 +22,7 @@ library(ggrepel)
 # Where to save datasets
 fileplace <- "1 Belize"
 # Type of model, in this case we have the simple scenarios
-fileplace1 <- "case5"
+fileplace1 <- "case6"
 fileplace2 <- "figures"
 
 ########################################################################
@@ -57,36 +58,36 @@ df_col <- df %>%
 ########################################################################
 # optimal path
 
-mortguess1 <- c(0.00001,
-                0.00001,
-                0.00001,
-                0.00001,
-                0.00001,
-                0.00001,
-                0.00001,
-                63.52840626,
-                321.7904004,
-                451.5504848,
-                518.8416954,
-                554.3876054,
-                573.3609044,
-                583.5467967,
-                589.0324205,
-                591.9917899,
-                593.5897917,
-                594.4531175,
-                594.9196596,
-                595.1718167,
-                595.3081137,
-                595.3817887,
-                595.4216145,
-                595.443143,
-                595.4547807,
-                595.4610717,
-                595.4644724,
-                595.4663108,
-                595.4673045,
-                595.4678418)
+mortguess1 <- c(1547.882353,
+                1227.714551,
+                972.4330969,
+                809.6633105,
+                714.321799,
+                660.6165096,
+                630.9490618,
+                614.7253823,
+                605.9007877,
+                601.1145019,
+                598.5224985,
+                597.1199652,
+                596.361393,
+                595.9512116,
+                595.7294438,
+                595.6095518,
+                595.5447383,
+                595.5097008,
+                595.4907602,
+                595.4805213,
+                595.4749864,
+                595.4719944,
+                595.470377,
+                595.4695026,
+                595.46903,
+                595.4687745,
+                595.4686364,
+                595.4685617,
+                595.4685213,
+                595.4684995)
 
 year_mort <- seq(1,30, 1)
 
@@ -121,7 +122,7 @@ years=30
 # seq(0,30)
 
 output_base <- df_col %>% 
-  mutate(year = rep(seq(0,30), times=30),
+  mutate(year = rep(seq(0,30), times=20),
          bmsy1=stock.s_1/BMSY1,
          bmsy2=stock.s_2/BMSY2,
          #msy3=stock.s_3/MSY3,
@@ -155,16 +156,17 @@ all_outputs <- output_base  %>%
                          id == "08" ~ "080",
                          id == "09" ~ "090",
                          id == "01" ~ "010",
-                         id == "1" ~ "100",
-                         id == "11" ~ "110",
-                         id == "12" ~ "120",
-                         id == "13" ~ "130",
-                         id == "14" ~ "140",
-                         id == "15" ~ "150"),
+                         id == "1" ~ "100"),
+                         #id == "11" ~ "110",
+                         #id == "12" ~ "120",
+                         #id == "13" ~ "130",
+                         #id == "14" ~ "140",
+                         #id == "15" ~ "150"),
          id2=ifelse(is.na(id2), id, id2),
          id = id2) %>% 
   select(-id2) %>% 
-  mutate(Label = ifelse(year == 30, id, NA))
+  mutate(Label = ifelse(year == 30, id, NA),
+         Label1 = ifelse(year == 1, id, NA))
 
 
 # create msy indicator function
@@ -374,7 +376,7 @@ for(y in 1:length(msylist)){
 ########################################################################
 ### CPUE
 
-title1ef <- "Effort (30y) gillnets on gillnets"
+title1ef <- "Effort (30y) on gillnets"
 title2ef <- "Effort (30y) on NONE technology"
 
 eff1 <- ggplot(data = all_outputs, aes(x=year, y=effort.t_1, color=id))+

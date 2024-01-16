@@ -142,7 +142,9 @@ all_outputs <- output_base  %>%
   mutate(tot_profits = profit_per_t.t_1 + profit_per_t.t_2, 
          tot_stock = stock.s_1 + stock.s_2,
          cpue1_1 = harvest.s_1/effort.t_1,
-         cpue2_1 = harvest.s_2/effort.t_1) %>% 
+         cpue2_1 = harvest.s_2/effort.t_1,
+         gcpue1_1=(cpue1_1 - lag(cpue1_1))/lag(cpue1_1),
+         gcpue2_1=(cpue2_1 - lag(cpue2_1))/lag(cpue2_1)) %>% 
   mutate(id2 = case_when(id == "01" ~ "010",
                          id == "02" ~ "020",
                          id == "03" ~ "030",
@@ -505,3 +507,60 @@ bio_all <- bio_all %>%
 
 write.table(na.omit(bio_all), here(fileplace, fileplace1,"tables", "lut_gut.csv"),
             row.names=FALSE, sep=",")
+
+########################################################################
+########################################################################
+### cpue growth
+
+title1cpue <- "Growth CPUE (30y) of gillnets on Mutton Snapper (Lutjanus analis)"
+title2cpue <- "Growth CPUE (30y) of gillnets on Red Jind (Epinephelus guttatus)"
+
+gcpue1_1 <- ggplot(data = all_outputs, aes(x=year, y=gcpue1_1, color=id))+
+  geom_line()+
+  #geom_line(aes(y=stock.s_2), color = "blue", size=1)+
+  #geom_line(aes(y=stock.s_3), color = "green", size=1)+
+  #geom_line(aes(y=stock.s_4), color = "orange", size=1)+
+  #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
+  #geom_line(aes(y=stock.s_6), color = "black", size=1)+
+  #geom_line(aes(y=stock.s_3), color = "black", size=1)+
+  geom_label(aes(label = Label), nudge_x = 0.35, size = 2)+ 
+  labs(title=title1cpue,
+       subtitle=subtitle1,
+       y= "Growth CPUE",
+       x= "Year")+
+  expand_limits(y = 0) +
+  theme_bw(base_size = 12) +
+  mytheme +
+  theme(legend.position = "none")
+
+gcpue1_1
+
+gcpue1_2 <- ggplot(data = all_outputs, aes(x=year, y=gcpue2_1, color=id))+
+  geom_line()+
+  #geom_line(aes(y=stock.s_2), color = "blue", size=1)+
+  #geom_line(aes(y=stock.s_3), color = "green", size=1)+
+  #geom_line(aes(y=stock.s_4), color = "orange", size=1)+
+  #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
+  #geom_line(aes(y=stock.s_6), color = "black", size=1)+
+  #geom_line(aes(y=stock.s_3), color = "black", size=1)+
+  geom_label(aes(label = Label), nudge_x = 0.35, size = 2)+ 
+  labs(title=title2cpue,
+       subtitle=subtitle1,
+       y= "Growth CPUE",
+       x= "Year")+
+  expand_limits(y = 0) +
+  theme_bw(base_size = 12) +
+  mytheme +
+  theme(legend.position = "none")
+
+gcpue1_2
+
+# save graphs
+msylist <- c("gcpue1_1", "gcpue1_2")
+#msylist <- as.list(msylist)
+
+for(y in 1:length(msylist)){ 
+  #filename = paste("msy_", y,".png", sep="")
+  # plot1 <- msylist[[y]]
+  ggsave(plot = get(msylist[y]), filename = here(fileplace, fileplace1,"figures", file=paste0("gcpue", y ,".png")), height = 5, width = 8)
+}
