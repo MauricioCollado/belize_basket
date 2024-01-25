@@ -1,0 +1,3 @@
+- Correct optimal path
+- Correct technology graph
+- Do for multiple technologies
