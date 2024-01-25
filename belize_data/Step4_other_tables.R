@@ -18,7 +18,8 @@ folder3 <- "step4"
 data_orig <- readRDS(here(folder1, folder2, "saup_belize_catch_data"))
                      
 # Read species
-spp_key <- read.csv("belize_data/step2/belize_fish_life_history.csv", as.is=T)                   
+#spp_key <- read.csv("belize_data/step2/belize_fish_life_history.csv", as.is=T) 
+spp_key <- read.csv(here("belize_data", "step2", "belize_fish_life_history.csv"), as.is=T)   
 
 # Format data
 ################################################################################
@@ -48,8 +49,21 @@ order_key <- data %>%
   # Arrange 
   arrange(desc(catch_mt_avg)) 
 
+
+### mixing reporting status
+data1 <- data_orig %>% 
+  # Reduce to species of interest
+  filter(sci_name %in% spp_key$sci_name) %>% 
+  # Summarize
+  group_by(sci_name, comm_name, year, gear_type) %>% 
+  summarize(catch_mt=sum(catch_mt, na.rm=T),
+            value_usd=sum(value_usd, na.rm=T)) %>% 
+  ungroup() %>% 
+  # Build name label
+  mutate(name_label=paste0(comm_name, "\n(", sci_name, ")"))
+
 # order data
-data_ordered <- data %>% 
+data_ordered <- data1 %>% 
   mutate(name_label=factor(name_label, levels=order_key$name_label))
 
 # price proxies
