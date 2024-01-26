@@ -163,10 +163,10 @@ all_outputs <- output_base  %>%
 # create msy indicator function
 #create indicator of reaching MSY
 
-all_outputs$bmsy1p<-ifelse(all_outputs$bmsy1>msy_thresh, 1, all_outputs$bmsy1p)
-all_outputs$bmsy2p<-ifelse(all_outputs$bmsy2>msy_thresh, 1, all_outputs$bmsy2p)
-all_outputs$msy3p<-ifelse(all_outputs$bmsy3>msy_thresh, 1, all_outputs$bmsy3p)
-all_outputs$msy4p<-ifelse(all_outputs$bmsy4>msy_thresh, 1, all_outputs$bmsy4p)
+all_outputs$bmsy1p<-ifelse(all_outputs$bmsy1>msy_thresh, 1, 0)
+all_outputs$bmsy2p<-ifelse(all_outputs$bmsy2>msy_thresh, 1, 0)
+all_outputs$bmsy3p<-ifelse(all_outputs$bmsy3>msy_thresh, 1, 0)
+all_outputs$bmsy4p<-ifelse(all_outputs$bmsy4>msy_thresh, 1, 0)
 #all_outputs$msy5p<-ifelse(all_outputs$msy5>msy_thresh, 1, all_outputs$msy5p)
 #all_outputs$msy6p<-ifelse(all_outputs$msy6>msy_thresh, 1, all_outputs$msy6p)
 
@@ -254,9 +254,9 @@ abio3 <- ggplot(data = all_outputs, aes(x=year, y=stock.s_3, color=id))+
   theme_bw(base_size = 12) +
   mytheme+
   theme(legend.position = "none")+
-  geom_hline(yintercept=c(0.25*k2, 0.5*k2), linetype='dashed') +
-  annotate(geom="text", x=0, y=0.3*k2, label="25% K") +
-  annotate(geom="text", x=0, y=0.55*k2, label="50% K")
+  geom_hline(yintercept=c(0.25*k3, 0.5*k3), linetype='dashed') +
+  annotate(geom="text", x=0, y=0.3*k3, label="25% K") +
+  annotate(geom="text", x=0, y=0.55*k3, label="50% K")
 
 #  geom_hline(yintercept=c(0.25*k2, 0.5*k2), linetype='dashed', color=c('blue', 'red'))
 abio3
@@ -278,9 +278,9 @@ abio4 <- ggplot(data = all_outputs, aes(x=year, y=stock.s_4, color=id))+
   theme_bw(base_size = 12) +
   mytheme+
   theme(legend.position = "none")+
-  geom_hline(yintercept=c(0.25*k2, 0.5*k2), linetype='dashed') +
-  annotate(geom="text", x=0, y=0.3*k2, label="25% K") +
-  annotate(geom="text", x=0, y=0.55*k2, label="50% K")
+  geom_hline(yintercept=c(0.25*k4, 0.5*k4), linetype='dashed') +
+  annotate(geom="text", x=0, y=0.3*k4, label="25% K") +
+  annotate(geom="text", x=0, y=0.55*k4, label="50% K")
 
 #  geom_hline(yintercept=c(0.25*k2, 0.5*k2), linetype='dashed', color=c('blue', 'red'))
 abio4
@@ -659,17 +659,16 @@ for(y in 1:length(msylist)){
 
 bio_all <- all_outputs %>% 
   select(-Label, -Label1)
-  
-bio_all <- drop_na(bio_all)
+
+# bio_all <- drop_na(bio_all)
 
 bio_all <- bio_all %>%
   group_by(id) %>%
-  summarise(s1=sum((bmsy1p))/years,
-            s2=sum((bmsy2p))/years,
-            s3=sum((bmsy3p))/years,
-            s4=sum((bmsy4p))/years,
-            #s5=sum((msy5p))/years,
-            #s6=sum((msy6p))/years,
+  select(starts_with("bmsy")) %>% 
+  summarise(s1=sum((bmsy1p)/years),
+            s2=sum((bmsy2p)/years),
+            s3=sum((bmsy3p)/years),
+            s4=sum((bmsy4p)/years),
             .groups = 'drop'
   ) %>% 
   ungroup()

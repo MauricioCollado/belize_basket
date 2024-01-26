@@ -104,8 +104,8 @@ b1 <- c(s1 = 1, s2 = 1, s3 = 1, s4 = 1)
 # msy info
 msy_1 <- 6.4236	#black
 msy_2 <- 20.6 #goliath
-msy_3 <- 0.5*k3*r3	#tiger
-msy_4 <-  0.5*k4*r4 #yellowfin
+msy_3 <- 0.25*k3*r3	#tiger
+msy_4 <-  0.25*k4*r4 #yellowfin
 
 mortguess1_1 <- msy_1 
 

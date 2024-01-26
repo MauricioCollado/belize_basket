@@ -474,17 +474,14 @@ for(y in 1:length(msylist)){
 
 bio_all <- all_outputs %>% 
   select(-Label, -Label1)
-  
-bio_all <- drop_na(bio_all)
+
+# bio_all <- drop_na(bio_all)
 
 bio_all <- bio_all %>%
   group_by(id) %>%
-  summarise(s1=sum((bmsy1p))/years,
-            s2=sum((bmsy2p))/years,
-            #s3=sum((msy3p))/years,
-            #s4=sum((msy4p))/years,
-            #s5=sum((msy5p))/years,
-            #s6=sum((msy6p))/years,
+  select(starts_with("bmsy")) %>% 
+  summarise(s1=sum((bmsy1p)/years),
+            s2=sum((bmsy2p)/years),
             .groups = 'drop'
   ) %>% 
   ungroup()

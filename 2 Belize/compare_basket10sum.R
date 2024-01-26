@@ -154,8 +154,8 @@ all_outputs <- output_base  %>%
 # create msy indicator function
 #create indicator of reaching MSY
 
-all_outputs$bmsy1p<-ifelse(all_outputs$bmsy1>msy_thresh, 1, all_outputs$bmsy1p)
-all_outputs$bmsy2p<-ifelse(all_outputs$bmsy2>msy_thresh, 1, all_outputs$bmsy2p)
+all_outputs$bmsy1p<-ifelse(all_outputs$bmsy1>msy_thresh, 1, 0)
+all_outputs$bmsy2p<-ifelse(all_outputs$bmsy2>msy_thresh, 1, 0)
 #all_outputs$msy3p<-ifelse(all_outputs$msy3>msy_thresh, 1, all_outputs$msy3p)
 #all_outputs$msy4p<-ifelse(all_outputs$msy4>msy_thresh, 1, all_outputs$msy4p)
 #all_outputs$msy5p<-ifelse(all_outputs$msy5>msy_thresh, 1, all_outputs$msy5p)
@@ -475,16 +475,13 @@ for(y in 1:length(msylist)){
 bio_all <- all_outputs %>% 
   select(-Label, -Label1)
   
-bio_all <- drop_na(bio_all)
+# bio_all <- drop_na(bio_all)
 
 bio_all <- bio_all %>%
   group_by(id) %>%
-  summarise(s1=sum((bmsy1p))/years,
-            s2=sum((bmsy2p))/years,
-            #s3=sum((msy3p))/years,
-            #s4=sum((msy4p))/years,
-            #s5=sum((msy5p))/years,
-            #s6=sum((msy6p))/years,
+  select(starts_with("bmsy")) %>% 
+  summarise(s1=sum((bmsy1p)/years),
+            s2=sum((bmsy2p)/years),
             .groups = 'drop'
   ) %>% 
   ungroup()
@@ -660,7 +657,7 @@ success_long <- success %>%
   mutate(species = case_when(species == 1 ~ "Mutton Snapper",
                              species == 2 ~ "Red hind"))
 
-success_title <- "Proportion of indicator species quota and success rate"
+success_title <- "Proportion of MSY-sum quota and success rate"
 
 final_result <- ggplot(success_long, aes(x = bio, y = total, label=order)) +
   geom_point(aes(color=species))+
