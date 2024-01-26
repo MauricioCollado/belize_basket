@@ -119,16 +119,26 @@ all_outputs <- output_base  %>%
          cpue2_1 = harvest.s_2/effort.t_1,
          gcpue1_1=(cpue1_1 - lag(cpue1_1))/lag(cpue1_1),
          gcpue2_1=(cpue2_1 - lag(cpue2_1))/lag(cpue2_1)) %>% 
-  mutate(id2 = case_when(id == "01" ~ "10 %",
-                         id == "02" ~ "20 %",
-                         id == "03" ~ "30 %",
-                         id == "04" ~ "40 %",
-                         id == "05" ~ "50 %",
-                         id == "06" ~ "60 %",
-                         id == "07" ~ "70 %",
-                         id == "08" ~ "80 %",
-                         id == "09" ~ "90 %",
-                         id == "1" ~ "100 %"),
+  mutate(id2 = case_when(id == "005" ~ "5",
+                         id == "01" ~ "10",
+                         id == "015" ~ "15",
+                         id == "02" ~ "20",
+                         id == "025" ~ "25",
+                         id == "03" ~ "30",
+                         id == "035" ~ "35",
+                         id == "04" ~ "40",
+                         id == "045" ~ "45",
+                         id == "05" ~ "50",
+                         id == "055" ~ "55",
+                         id == "06" ~ "60",
+                         id == "065" ~ "65",
+                         id == "07" ~ "70",
+                         id == "075" ~ "75",
+                         id == "08" ~ "80",
+                         id == "085" ~ "85",
+                         id == "09" ~ "90",
+                         id == "095" ~ "95",
+                         id == "1" ~ "100"),
                          #id == "11" ~ "110",
                          #id == "12" ~ "120",
                          #id == "13" ~ "130",
@@ -161,7 +171,7 @@ all_outputs$bmsy2p<-ifelse(all_outputs$bmsy2>msy_thresh, 1, all_outputs$bmsy2p)
 title1 <- "Stock Mutton Snapper (Lutjanus analis) "
 title2 <- "Stock Red Jind (Epinephelus guttatus)"
 
-subtitle1 <- "1 basket, 2 species, 1 gear type, optimal path"
+subtitle1 <- "1 basket, 2 species, 1 gear type, indicator species quota"
 
 mytheme<-theme( strip.background = element_rect(fill="white"),
                 axis.ticks.length = unit(-0.05, "in"),
@@ -301,7 +311,7 @@ har1 <- ggplot()+
   #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
   #geom_line(aes(y=stock.s_6), color = "black", size=1)+
   #geom_line(aes(y=stock.s_3), color = "black", size=1)+
-  geom_point(data=optim_path, aes(x=year, y=harvest.s_1), size=1) +
+  ### geom_point(data=optim_path, aes(x=year, y=harvest.s_1), size=1) +
   geom_label(data = all_outputsr, aes(x=year, y=harvest.s_1, label = Label1, alpha=0.1), nudge_x = 0.35, size = 1)+ 
   labs(title=title1har,
        subtitle=subtitle1,
@@ -348,7 +358,7 @@ for(y in 1:length(msylist)){
 ########################################################################
 ### CPUE
 
-title1ef <- "Effort (30y) on gillnets"
+title1ef <- "Effort (30y) on generic technology"
 title2ef <- "Effort (30y) on NONE technology"
 
 eff1 <- ggplot(data = all_outputs, aes(x=year, y=effort.t_1, color=id))+
@@ -538,3 +548,134 @@ for(y in 1:length(msylist)){
   # plot1 <- msylist[[y]]
   ggsave(plot = get(msylist[y]), filename = here(fileplace, fileplace1,"figures", file=paste0("gcpue", y ,".png")), height = 5, width = 8)
 }
+
+
+######## revenue
+
+npv <-  read_csv(here("2 single_sp", "basket10", "results", "npvcase.csv"))
+
+single <- npv[ , grepl( "rev_per" , names(npv))] %>% 
+  mutate(year = seq(0,30))
+
+single <- drop_na(single)
+
+rev_single <- single %>%
+  summarise(s1=sum((rev_per_sp.s_1)),
+            s2=sum((rev_per_sp.s_2)),
+            #s3=sum((rev_per_sp.s_3)),
+            #s4=sum((rev_per_sp.s_4)),
+            #s5=sum((rev_per_sp.s_5)),
+            #s6=sum((rev_per_sp.s_6))
+  ) 
+
+all_rev <- all_outputs
+
+all_rev  <- all_rev %>% 
+  select(id, year, starts_with("rev_per"))
+
+all_rev  <- drop_na(all_rev)
+
+all_rev1 <- all_rev  %>%
+  group_by(id) %>%
+  summarise(s1=sum((rev_per_sp.s_1)),
+            s2=sum((rev_per_sp.s_2)),
+            #s3=sum((rev_per_sp.s_3.x)),
+            #s4=sum((rev_per_sp.s_4.x)),
+            #s5=sum((rev_per_sp.s_5.x)),
+            #s6=sum((rev_per_sp.s_6.x)),
+            .groups = 'drop'
+  )  
+
+
+
+all_rev1$s1 <- all_rev1$s1/rev_single$s1
+all_rev1$s2 <- all_rev1$s2/rev_single$s2
+#all_rev1$s3 <- all_rev1$s3/rev_single$s3
+#all_rev1$s4 <- all_rev1$s4/rev_single$s4
+#all_rev1$s5 <- all_rev1$s5/rev_single$s5
+#all_rev1$s6 <- all_rev1$s6/rev_single$s6
+
+
+######## profit
+
+profit_single <- npv %>% 
+  select(starts_with("profit_per")) %>% 
+  mutate(year = seq(0,30))
+
+profit_single <- drop_na(profit_single)
+
+pro <-profit_single %>%
+  summarise(s1=sum((profit_per_t.t_1)),
+            s2=sum((profit_per_t.t_2)),
+            #s3=sum((profit_per_t.t_3)),
+            #s4=sum((profit_per_t.t_4))
+            #s3=sum((rev_per_sp.s_3)),
+            #s4=sum((rev_per_sp.s_4)),
+            #s5=sum((rev_per_sp.s_5)),
+            #s6=sum((rev_per_sp.s_6))
+  ) %>% 
+  mutate(total = s1 + s2)
+
+all_profits  <- all_outputs %>% 
+  select(id, year, starts_with("profit_per"))
+
+
+all_profits    <- drop_na(all_profits  )
+
+all_profits1  <- all_profits    %>%
+  group_by(id) %>%
+  summarise(s1=sum((profit_per_t.t_1)),
+            s2=sum((profit_per_t.t_2)),
+            #s3=sum((rev_per_sp.s_3.x)),
+            #s4=sum((rev_per_sp.s_4.x)),
+            #s5=sum((rev_per_sp.s_5.x)),
+            #s6=sum((rev_per_sp.s_6.x)),
+            .groups = 'drop'
+  )  %>% 
+  mutate(total = s1 + s2)
+
+
+all_profits1$total <- all_profits1$total/pro$total
+
+all_profits1 <- all_profits1 %>% 
+  select(id, total)
+
+write.table(na.omit(all_profits1), here(fileplace, fileplace1,"tables", "profits.csv"),
+            row.names=FALSE, sep=",")
+
+
+###### join
+success <- all_rev <- left_join(bio_all, all_profits1, by="id") %>% 
+  mutate(order = as.numeric(as.character(id))) 
+
+write.table(na.omit(success), here(fileplace, fileplace1,"tables", "combined_result.csv"),
+            row.names=FALSE, sep=",")
+
+
+success_long <- success %>% 
+  pivot_longer(
+    cols = starts_with("s"),
+    names_to = "species",
+    names_prefix = "s",
+    values_to = "bio",
+    values_drop_na = TRUE
+  ) %>% 
+  mutate(species = case_when(species == 1 ~ "Mutton Snapper",
+                         species == 2 ~ "Red hind"))
+
+success_title <- "Proportion of indicator species quota and success rate"
+
+final_result <- ggplot(success_long, aes(x = bio, y = total, label=order)) +
+  geom_point(aes(color=species))+
+  geom_text(hjust=1.5, vjust=0, size = 6/.pt)+
+  labs(title=success_title,
+       subtitle=subtitle1,
+       y= "Profit ratio",
+       x= "% of succcesful conservation years")+
+  expand_limits(y = 0) +
+  theme_bw(base_size = 12) +
+  mytheme
+
+final_result
+
+ggsave(plot = final_result, filename = here(fileplace, fileplace1,"figures", "final_graph.png"), height = 5, width = 8)
