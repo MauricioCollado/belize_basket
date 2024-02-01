@@ -80,8 +80,10 @@ names(optim_path) <- c("year", "harvest.s_1")
 
 k1 <- 125.811 #Black grouper
 k2 <- 522.7108 #Goliath grouper
-k3 <- 1513.245 #Tiger grouper
-k4 <- 1465.512 
+#k3 <- 1513.245 #Tiger grouper
+#k4 <- 1465.512 #Yellowfin grouper
+k3 <- 763.0717 #Tiger grouper
+k4 <- 710.4941 #Yellowfin grouper
 
 
 BMSY1=0.5*k1
@@ -100,7 +102,7 @@ years=30
 # seq(0,30)
 
 output_base <- df_col %>% 
-  mutate(year = rep(seq(0,30), times=20),
+  mutate(year = rep(seq(0,30), times=100), # before times = 20
          bmsy1=stock.s_1/BMSY1,
          bmsy2=stock.s_2/BMSY2,
          bmsy3=stock.s_3/BMSY3,
@@ -128,31 +130,106 @@ all_outputs <- output_base  %>%
          gcpue2_1=(cpue2_1 - lag(cpue2_1))/lag(cpue2_1),
          gcpue3_1=(cpue3_1 - lag(cpue3_1))/lag(cpue3_1),
          gcpue4_1=(cpue4_1 - lag(cpue4_1))/lag(cpue4_1)) %>% 
-  mutate(id2 = case_when(id == "005" ~ "5",
+  mutate(id2 = case_when(id == "001" ~ "1",
+                         id == "002" ~ "2",
+                         id == "003" ~ "3",
+                         id == "004" ~ "4",
+                         id == "005" ~ "5",
+                         id == "006" ~ "6",
+                         id == "007" ~ "7",
+                         id == "008" ~ "8",
+                         id == "009" ~ "9",
                          id == "01" ~ "10",
+                         id == "011" ~ "11",
+                         id == "012" ~ "12",
+                         id == "013" ~ "13",
+                         id == "014" ~ "14",
                          id == "015" ~ "15",
+                         id == "016" ~ "16",
+                         id == "017" ~ "17",
+                         id == "018" ~ "18",
+                         id == "019" ~ "19",
                          id == "02" ~ "20",
+                         id == "021" ~ "21",
+                         id == "022" ~ "22",
+                         id == "023" ~ "23",
+                         id == "024" ~ "24",
                          id == "025" ~ "25",
+                         id == "026" ~ "26",
+                         id == "027" ~ "27",
+                         id == "028" ~ "28",
+                         id == "029" ~ "29",
                          id == "03" ~ "30",
+                         id == "031" ~ "31",
+                         id == "032" ~ "32",
+                         id == "033" ~ "33",
+                         id == "034" ~ "34",
                          id == "035" ~ "35",
+                         id == "036" ~ "36",
+                         id == "037" ~ "37",
+                         id == "038" ~ "38",
+                         id == "039" ~ "39",
                          id == "04" ~ "40",
+                         id == "041" ~ "41",
+                         id == "042" ~ "42",
+                         id == "043" ~ "43",
+                         id == "044" ~ "44",
                          id == "045" ~ "45",
+                         id == "046" ~ "46",
+                         id == "047" ~ "47",
+                         id == "048" ~ "48",
+                         id == "049" ~ "49",
                          id == "05" ~ "50",
+                         id == "051" ~ "51",
+                         id == "052" ~ "52",
+                         id == "053" ~ "53",
+                         id == "054" ~ "54",
                          id == "055" ~ "55",
+                         id == "056" ~ "56",
+                         id == "057" ~ "57",
+                         id == "058" ~ "58",
+                         id == "059" ~ "59",
                          id == "06" ~ "60",
+                         id == "061" ~ "61",
+                         id == "062" ~ "62",
+                         id == "063" ~ "63",
+                         id == "064" ~ "64",
                          id == "065" ~ "65",
+                         id == "066" ~ "66",
+                         id == "067" ~ "67",
+                         id == "068" ~ "68",
+                         id == "069" ~ "69",
                          id == "07" ~ "70",
+                         id == "071" ~ "71",
+                         id == "072" ~ "72",
+                         id == "073" ~ "73",
+                         id == "074" ~ "74",
                          id == "075" ~ "75",
+                         id == "076" ~ "76",
+                         id == "077" ~ "77",
+                         id == "078" ~ "78",
+                         id == "079" ~ "79",
                          id == "08" ~ "80",
+                         id == "081" ~ "81",
+                         id == "082" ~ "82",
+                         id == "083" ~ "83",
+                         id == "084" ~ "84",
                          id == "085" ~ "85",
+                         id == "086" ~ "86",
+                         id == "087" ~ "87",
+                         id == "088" ~ "88",
+                         id == "089" ~ "89",
                          id == "09" ~ "90",
+                         id == "091" ~ "91",
+                         id == "092" ~ "92",
+                         id == "093" ~ "93",
+                         id == "094" ~ "94",
                          id == "095" ~ "95",
+                         id == "096" ~ "96",
+                         id == "097" ~ "97",
+                         id == "098" ~ "98",
+                         id == "099" ~ "99",
                          id == "1" ~ "100"),
-                         #id == "11" ~ "110",
-                         #id == "12" ~ "120",
-                         #id == "13" ~ "130",
-                         #id == "14" ~ "140",
-                         #id == "15" ~ "150"),
          id2=ifelse(is.na(id2), id, id2),
          id = id2) %>% 
   select(-id2) %>% 
@@ -404,7 +481,7 @@ for(y in 1:length(msylist)){
 title1har <- "Harvest (30y) Black Grouper"
 title2har <- "Harvest (30y) Goliath Grouper"
 title3har <- "Harvest (30y) Tiger Grouper"
-title4har <- "Harvest (30y) Yellowgin Grouper"
+title4har <- "Harvest (30y) Yellowfin Grouper"
 
 har1 <- ggplot()+
   geom_line(data = all_outputsr, aes(x=year, y=harvest.s_1, color=id))+
@@ -658,20 +735,23 @@ for(y in 1:length(msylist)){
 ### biomass indicator
 
 bio_all <- all_outputs %>% 
-  select(-Label, -Label1)
+  select(-Label, -Label1) %>% 
+  mutate(bmsy_all = bmsy1p + bmsy2p + bmsy3p + bmsy4p)
 
 # bio_all <- drop_na(bio_all)
 
 bio_all <- bio_all %>%
   group_by(id) %>%
   select(starts_with("bmsy")) %>% 
-  summarise(s1=sum((bmsy1p)/years),
-            s2=sum((bmsy2p)/years),
-            s3=sum((bmsy3p)/years),
-            s4=sum((bmsy4p)/years),
-            .groups = 'drop'
-  ) %>% 
-  ungroup()
+  summarise(s1=sum(bmsy1p)/years,
+            s2=sum(bmsy2p)/years,
+            s3=sum(bmsy3p)/years,
+            s4=sum(bmsy4p)/years,
+            s5=sum(bmsy_all)/(years*4),
+            .groups = 'drop') %>% 
+  ungroup() %>% 
+  filter(s1>0, s2>0, s3>0, s4>0)
+
 
 write.table(na.omit(bio_all), here(fileplace, fileplace1,"tables", "basket9.csv"),
             row.names=FALSE, sep=",")
@@ -861,11 +941,10 @@ write.table(na.omit(all_profits1), here(fileplace, fileplace1,"tables", "profits
 
 ###### join
 success <- all_rev <- left_join(bio_all, all_profits1, by="id") %>% 
-  mutate(order = as.numeric(as.character(id))) 
+  mutate(order = as.numeric(as.character(id)))
 
 write.table(na.omit(success), here(fileplace, fileplace1,"tables", "combined_result.csv"),
             row.names=FALSE, sep=",")
-
 
 success_long <- success %>% 
   pivot_longer(
@@ -879,19 +958,21 @@ success_long <- success %>%
                              species == 2 ~ "Goliath grouper",
                              species == 3 ~ "Tiger grouper",
                              species == 4 ~ "Yellowfin grouper",
+                             species == 5 ~ "All species"
   ))
 
-success_title <- "Proportion of MSY sum quota and success rate"
 
-final_result <- ggplot(success_long, aes(x = bio, y = total, label=order)) +
+success_title <- "Policy goals trade-off"
+
+final_result <- ggplot(success_long, aes(x = bio, y = total, label=order)) + # 
   geom_point(aes(color=species))+
-  geom_text(hjust=1.5, vjust=0, size = 6/.pt)+
+  geom_text(hjust=1.5, vjust=0, size = 5/.pt)+
   labs(title=success_title,
        subtitle=subtitle1,
        y= "Profit ratio",
        x= "% of succcesful conservation years")+
   expand_limits(y = 0) +
-  theme_bw(base_size = 12) +
+  theme_bw(base_size = 10) +
   mytheme
 
 final_result
