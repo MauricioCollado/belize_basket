@@ -18,6 +18,7 @@ library(kableExtra)
 library(ggtext)
 library(ggplot2)
 library(ggrepel)
+library(metR)
 
 # Where to save datasets
 fileplace <- "2 Belize"
@@ -234,7 +235,8 @@ all_outputs <- output_base  %>%
          id = id2) %>% 
   select(-id2) %>% 
   mutate(Label = ifelse(year == 30, id, NA),
-         Label1 = ifelse(year == 1, id, NA))
+         Label1 = ifelse(year == 1, id, NA),
+         order = as.numeric(as.character(id)))
 
 
 # create msy indicator function
@@ -267,15 +269,16 @@ mytheme<-theme( strip.background = element_rect(fill="white"),
                 axis.text.x = element_markdown(margin=unit(c(0.3,0.3,0.3,0.3), "cm")),
                 legend.position = "bottom")
 
-abio1 <- ggplot(data = all_outputs, aes(x=year, y=stock.s_1, color=id))+
-  geom_line()+
-  #geom_line(aes(y=stock.s_2), color = "blue", size=1)+
-  #geom_line(aes(y=stock.s_3), color = "green", size=1)+
-  #geom_line(aes(y=stock.s_4), color = "orange", size=1)+
-  #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
-  #geom_line(aes(y=stock.s_6), color = "black", size=1)+
-  #geom_line(aes(y=stock.s_3), color = "black", size=1)+
-  geom_label(aes(label = Label), nudge_x = 0.35, size = 1)+ 
+#mybreaks <- c(20,40,60,80)
+
+abio1 <- ggplot()+
+  #ggplot(data = all_outputs, aes(x=year, y=stock.s_1, color = id))+
+  #geom_line() + 
+  #geom_label(aes(label = Label), nudge_x = 0.35, size = 1) + 
+  geom_line(data = all_outputs, aes(x=year, y=stock.s_1, color = id)) +
+  geom_text(data = all_outputs%>% filter(order > 40 & order < 60), aes(label = Label, 
+                                                               x = year + 0.5, 
+                                                               y = stock.s_1), size = 2) +
   labs(title=title1,
        subtitle=subtitle1,
        y= "Stock",
@@ -283,35 +286,50 @@ abio1 <- ggplot(data = all_outputs, aes(x=year, y=stock.s_1, color=id))+
   expand_limits(y = 0) +
   theme_bw(base_size = 12) +
   mytheme +
-  theme(legend.position = "none")+
+  theme(legend.position = "none") +
   geom_hline(yintercept=c(0.25*k1, 0.5*k1), linetype='dashed') +
   annotate(geom="text", x=0, y=0.3*k1, label="25% K") +
   annotate(geom="text", x=0, y=0.55*k1, label="50% K")
 
 abio1
 
-abio2 <- ggplot(data = all_outputs, aes(x=year, y=stock.s_2, color=id))+
-  geom_line()+
-  #geom_line(aes(y=stock.s_2), color = "blue", size=1)+
-  #geom_line(aes(y=stock.s_3), color = "green", size=1)+
-  #geom_line(aes(y=stock.s_4), color = "orange", size=1)+
-  #geom_line(aes(y=stock.s_5), color = "purple", size=1)+
-  #geom_line(aes(y=stock.s_6), color = "black", size=1)+
-  #geom_line(aes(y=stock.s_3), color = "black", size=1)+
-  geom_label(aes(label = Label), nudge_x = 0.35, size = 1) + 
+#abio2 <- ggplot(data = all_outputs, aes(x=year, y=stock.s_2, color=id))+
+ # geom_line()+
+  # geom_label(aes(label = Label), nudge_x = 0.35, size = 1) + 
+  #labs(title=title2,
+   #    subtitle=subtitle1,
+    #   y= "Stock",
+     #  x= "Year")+
+  #expand_limits(y = 0) +
+  #theme_bw(base_size = 12) +
+  #mytheme+
+  #theme(legend.position = "none")+
+  #geom_hline(yintercept=c(0.25*k2, 0.5*k2), linetype='dashed') +
+  #annotate(geom="text", x=0, y=0.3*k2, label="25% K") +
+  #annotate(geom="text", x=0, y=0.55*k2, label="50% K")
+
+#  geom_hline(yintercept=c(0.25*k2, 0.5*k2), linetype='dashed', color=c('blue', 'red'))
+
+abio2 <- ggplot()+
+  #ggplot(data = all_outputs, aes(x=year, y=stock.s_1, color = id))+
+  #geom_line() + 
+  #geom_label(aes(label = Label), nudge_x = 0.35, size = 1) + 
+  geom_line(data = all_outputs, aes(x=year, y=stock.s_2, color = id)) +
+  geom_text(data = all_outputs%>% filter(order > 59 & order < 65), aes(label = Label, 
+                                                                       x = year + 0.5, 
+                                                                       y = stock.s_2), size = 2) +
   labs(title=title2,
        subtitle=subtitle1,
        y= "Stock",
        x= "Year")+
   expand_limits(y = 0) +
   theme_bw(base_size = 12) +
-  mytheme+
-  theme(legend.position = "none")+
+  mytheme +
+  theme(legend.position = "none") +
   geom_hline(yintercept=c(0.25*k2, 0.5*k2), linetype='dashed') +
   annotate(geom="text", x=0, y=0.3*k2, label="25% K") +
   annotate(geom="text", x=0, y=0.55*k2, label="50% K")
 
-#  geom_hline(yintercept=c(0.25*k2, 0.5*k2), linetype='dashed', color=c('blue', 'red'))
 abio2
 
 abio3 <- ggplot(data = all_outputs, aes(x=year, y=stock.s_3, color=id))+
@@ -940,8 +958,8 @@ write.table(na.omit(all_profits1), here(fileplace, fileplace1,"tables", "profits
 
 
 ###### join
-success <- all_rev <- left_join(bio_all, all_profits1, by="id") %>% 
-  mutate(order = as.numeric(as.character(id)))
+success <- all_rev <- left_join(bio_all, all_profits1, by="id") 
+#%>%  mutate(order = as.numeric(as.character(id)))
 
 write.table(na.omit(success), here(fileplace, fileplace1,"tables", "combined_result.csv"),
             row.names=FALSE, sep=",")
