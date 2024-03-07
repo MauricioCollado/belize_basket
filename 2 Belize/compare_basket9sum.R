@@ -958,8 +958,7 @@ write.table(na.omit(all_profits1), here(fileplace, fileplace1,"tables", "profits
 
 
 ###### join
-success <- all_rev <- left_join(bio_all, all_profits1, by="id") 
-#%>%  mutate(order = as.numeric(as.character(id)))
+success <- left_join(bio_all, all_profits1, by="id") %>%  mutate(fraction = as.numeric(as.character(id)))
 
 write.table(na.omit(success), here(fileplace, fileplace1,"tables", "combined_result.csv"),
             row.names=FALSE, sep=",")
@@ -976,22 +975,30 @@ success_long <- success %>%
                              species == 2 ~ "Goliath grouper",
                              species == 3 ~ "Tiger grouper",
                              species == 4 ~ "Yellowfin grouper",
-                             species == 5 ~ "All species"
-  ))
+                             species == 5 ~ "All species")
+  )
 
 
-success_title <- "Policy goals trade-off"
+success_title <- "Trade-off of policy goals"
 
-final_result <- ggplot(success_long, aes(x = bio, y = total, label=order)) + # 
-  geom_point(aes(color=species))+
-  geom_text(hjust=1.5, vjust=0, size = 5/.pt)+
+final_result <- ggplot(success_long, aes(x = bio, y = total)) + # 
+  geom_point(aes(color=species, size=fraction), alpha=0.2)+
+  #geom_label(aes(label = fraction), size = 5) + 
+  #geom_text(hjust=1.5, vjust=0, size = 5/.pt)+
+  geom_text(data = success_long%>% filter(fraction > 40), aes(label = fraction, 
+                                                                       x = bio, 
+                                                                       y = total), size = 2) +
   labs(title=success_title,
        subtitle=subtitle1,
        y= "Profit ratio",
        x= "% of succcesful conservation years")+
   expand_limits(y = 0) +
   theme_bw(base_size = 10) +
-  mytheme
+  mytheme+
+  theme(
+    legend.justification = 'left', 
+    legend.position = 'bottom', legend.box = 'vertical', 
+    legend.box.just = 'left')
 
 final_result
 
