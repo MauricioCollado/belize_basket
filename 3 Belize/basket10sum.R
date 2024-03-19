@@ -24,13 +24,8 @@ fileplace1 <- "basket10"
 
 # Technology array
 
-qi1 <- 0.003603335
-qi2 <- 0.000741001
-#qi3 <- 0.0006
-#qi4 <- 0.000874
-#qi5 <- 0.000874
-#qi6 <- 0.000874
-
+qi1 <- 0.003551859
+qi2 <- 0.000730416
 
 qi7 <- 0 #complete other with zero
 

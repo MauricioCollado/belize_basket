@@ -24,12 +24,12 @@ fileplace1 <- "basket4"
 
 # Technology array
 
-qi1 <- 0.090232895	#	Haemulon plumierii
-qi2 <- 0.011330203	#	Lutjanus griseus
-qi3 <- 0.014297059	#	Haemulon sciurus
-qi4 <- 0.050147159	#	Sphyraena barracuda
-qi5 <- 0.200188165	#	Gerres cinereus
-qi6 <- 0.011330203	#	Diapterus auratus
+qi1 <- 0.131246381	#	Lutjanus vivanus
+qi2 <- 0.032811595#	Lutjanus buccanella
+qi3 <- 0.311178177	#	Lutjanus purpureus
+qi4 <- 0.032811595	#	Etelis oculatus
+qi5 <- 0.032811595	#	Rhomboplites aurorubens
+qi6 <- 0.032811595	#	Hyporthodus mystacinus
 
 
 qi7 <- 0 #complete other with zero

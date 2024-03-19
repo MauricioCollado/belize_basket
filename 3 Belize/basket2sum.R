@@ -29,7 +29,7 @@ qi2 <- 0.011330203	#	Lutjanus griseus
 qi3 <- 0.014297059	#	Haemulon sciurus
 qi4 <- 0.050147159	#	Sphyraena barracuda
 qi5 <- 0.200188165	#	Gerres cinereus
-qi6 <- 0.011330203	#	Diapterus auratus
+qi6 <- 0.002832551	#	Diapterus auratus
 
 
 qi7 <- 0 #complete other with zero

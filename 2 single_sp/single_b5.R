@@ -49,7 +49,7 @@ s2 <- c(s=2, r=r2, K=k2, X=k2*prop, p=p2, tcoef=0) #cyano
 
 # t = tech, q1 = catchability species 1, q2 = catchability species 2...
 qi1 <- 0.070001799	#	Lutjanus jocu
-qi2 <- 0.099362426	#	Lutjanus cyanopterus
+qi2 <- 0.01750045 	#	Lutjanus cyanopterus
 #qi4 <- 0.000874
 #qi5 <- 0.000874
 #qi6 <- 0.000874

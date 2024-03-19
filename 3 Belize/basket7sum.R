@@ -24,8 +24,8 @@ fileplace1 <- "basket7"
 
 # Technology array
 qi1 <- 0.05748786	#	Centropomus undecimalis
-qi2 <- 0.048704374	#	Petenia splendida
-qi3 <- 0.030974309	#	Ictalurus furcatus
+qi2 <- 0.014371965	#	Petenia splendida
+qi3 <- 0.014371965	#	Ictalurus furcatus
 
 qi7 <- 0 #complete other with zero
 

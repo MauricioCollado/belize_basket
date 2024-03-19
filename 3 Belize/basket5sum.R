@@ -25,7 +25,7 @@ fileplace1 <- "basket5"
 # Technology array
 
 qi1 <- 0.070001799	#	Lutjanus jocu
-qi2 <- 0.099362426	#	Lutjanus cyanopterus
+qi2 <- 0.01750045 	#	Lutjanus cyanopterus
 
 qi7 <- 0 #complete other with zero
 

@@ -25,12 +25,9 @@ fileplace1 <- "basket3"
 # Technology array
 
 qi1 <- 0.0708011	#	Lutjanus apodus
-qi2 <- 0.125094145	#	Lutjanus mahogoni
-qi3 <- 0.106752292	#	Haemulon parra
-qi4 <- 0.053558264	#	Haemulon album
-#qi5 <- 0.000874
-#qi6 <- 0.000874
-
+qi2 <- 0.017700275 #	Lutjanus mahogoni
+qi3 <- 0.017700275	#	Haemulon parra
+qi4 <- 0.017700275	#	Haemulon album
 
 
 qi7 <- 0 #complete other with zero

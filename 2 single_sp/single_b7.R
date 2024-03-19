@@ -48,8 +48,8 @@ s3 <- c(s=3, r=r3, K=k3, X=k2*prop, p=p3, tcoef=0) #	Ictalurus furcatus
 
 # t = tech, q1 = catchability species 1, q2 = catchability species 2...
 qi1 <- 0.05748786	#	Centropomus undecimalis
-qi2 <- 0.048704374	#	Petenia splendida
-qi3 <- 0.030974309	#	Ictalurus furcatus
+qi2 <- 0.014371965	#	Petenia splendida
+qi3 <- 0.014371965	#	Ictalurus furcatus
 #qi5 <- 0.000874
 #qi6 <- 0.000874
 

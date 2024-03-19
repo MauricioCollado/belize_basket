@@ -24,10 +24,10 @@ fileplace1 <- "basket8"
 
 # Technology array
 
-qi1 <- 0.13021111	#	Caranx hippos
-qi2 <- 0.027776014	#	Scomberomorus cavalla
-qi3 <- 0.031372535	#	Scomberomorus maculatus
-qi4 <- 0.157684804	#	Scomberomorus regalis 
+qi1 <- 0.006944004#	maculatus
+qi2 <- 0.13021111	#	caranx hippos
+qi3 <- 0.027776014	#	cavalla
+qi4 <- 0.006944004	#	Scomberomorus regalis 
 #qi5 <- 0.000874
 #qi6 <- 0.000874
 
@@ -71,20 +71,20 @@ temp_anom=temp-temp_base
 ########################################################################
 # species parameters
 
-k1 <- 1022.915752	#	Caranx hippos
-k2 <- 2197.851729	#	Scomberomorus cavalla
-k3 <- 1155.365915	#	Scomberomorus maculatus
+k1 <- 1022.915752	#	Scomberomorus maculatus
+k2 <- 2197.851729	#	caranx hippos 
+k3 <- 1155.365915	#	Scomberomorus cavalla
 k4 <- 954.0645307	#	Scomberomorus regalis
 
 
-p1 <- 981.7302494	#	Caranx hippos
-p2 <- 524.8418006	#	Scomberomorus cavalla
-p3 <- 1438.618698	#	Scomberomorus maculatus
+p1 <- 981.7302494	#	maculatus
+p2 <- 524.8418006	#	Caranx hippos
+p3 <- 1438.618698	#	cavalla
 p4 <- 981.7302494	#	Scomberomorus regalis
 
-r1 <- 0.197414132	#	Caranx hippos
-r2 <- 0.472366553	#	Scomberomorus cavalla
-r3 <- 0.156452943	#	Scomberomorus maculatus
+r1 <- 0.197414132	#	maculatus
+r2 <- 0.472366553	#	Caranx hipposSc
+r3 <- 0.156452943	#	cavalla
 r4 <- 0.226627541	#	Scomberomorus regalis
 
 prop=0.4
@@ -102,10 +102,10 @@ s4 <- c(s=4, r=r4, K=k4, X=prop*k4, p=p4, tcoef=0)
 b1 <- c(s1 = 1, s2 = 1, s3 = 1, s4 = 1)
 
 # msy info
-msy_1 <- 50.48450634	#	Caranx hippos
-msy_2 <- 259.5479112	#	Scomberomorus cavalla
-msy_3 <- 45.1900993	#	Scomberomorus maculatus
-msy_4 <- 54.05432464	#	Scomberomorus regalis
+msy_1 <- 50.48450634	
+msy_2 <- 259.5479112	
+msy_3 <- 45.1900993	
+msy_4 <- 54.05432464	
 
 mortguess1_1 <- msy_1 + msy_2 + msy_3 + msy_4
 

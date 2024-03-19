@@ -36,10 +36,10 @@ k7 <- 81.62535576	#	Acanthocybium solandri
 k8 <- 272.7010473	#	Seriola dumerili
 
 p1 <- 4816.681053	#	Coryphaena hippurus
-p2 <- 3019.402095	#	Kajikia albida
-p3 <- 3019.402095	#	Kajikia audax
-p4 <- 3019.402095	#	Xiphias gladius
-p5 <- 3019.402095	#	Thunnus albacares
+p2 <- 3241.46496	#	Kajikia albida
+p3 <- 3241.46496 #	Kajikia audax
+p4 <- 3241.46496 #	Xiphias gladius
+p5 <- 3241.464965	#	Thunnus albacares
 p6 <- 1567.746469	#	Rachycentron canadum
 p7 <- 4714.274068	#	Acanthocybium solandri
 p8 <- 1867.158248	#	Seriola dumerili
@@ -67,10 +67,10 @@ s8 <- c(s=8, r=r8, K=k8, X=prop*k8, p=p8, tcoef=0)
 
 # t = tech, q1 = catchability species 1, q2 = catchability species 2...
 qi1 <- 0.100254065	#	Coryphaena hippurus
-qi2 <- 0.003712323	#	Kajikia albida
-qi3 <- 0.003712323	#	Kajikia audax
-qi4 <- 0.003712323	#	Xiphias gladius
-qi5 <- 0.003712323	#	Thunnus albacares
+qi2 <- 0.000928081  #	Kajikia albida
+qi3 <- 0.000928081	#	Kajikia audax
+qi4 <- 0.000928081	#	Xiphias gladius
+qi5 <- 0.000928081	#	Thunnus albacares
 qi6 <- 0.003712323	#	Rachycentron canadum
 qi7 <- 0.214771274	#	Acanthocybium solandri
 qi8 <- 0.060445281	#	Seriola dumerili

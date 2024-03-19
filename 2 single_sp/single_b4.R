@@ -58,11 +58,11 @@ s6 <- c(s=6, r=r6, K=k6, X=prop*k6, p=p6, tcoef=0)
 
 # t = tech, q1 = catchability species 1, q2 = catchability species 2...
 qi1 <- 0.131246381	#	Lutjanus vivanus
-qi2 <- 0.068162564	#	Lutjanus buccanella
+qi2 <- 0.032811595#	Lutjanus buccanella
 qi3 <- 0.311178177	#	Lutjanus purpureus
-qi4 <- 0.196079635	#	Etelis oculatus
-qi5 <- 0.093188204	#	Rhomboplites aurorubens
-qi6 <- 0.161750851	#	Hyporthodus mystacinus
+qi4 <- 0.032811595	#	Etelis oculatus
+qi5 <- 0.032811595	#	Rhomboplites aurorubens
+qi6 <- 0.032811595	#	Hyporthodus mystacinus
 
 qi7 <- 0
 

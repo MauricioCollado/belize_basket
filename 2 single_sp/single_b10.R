@@ -28,16 +28,14 @@ fileplace1 <- "2 single_sp"
 # s = species, r, K, X, p
 k1 <- 8156.8715 #analis
 k2 <- 163.63 #guttatus
-#k3 <- 522.7108
-#k4 <- 125.8112
 
 p1 <- 2590.2
 p2 <- 1914.21
 #p3 <- 1749.82
 #p4 <- 2398.5
 
-r1 <- 0.3
-r2 <- 0.4045
+r1 <- 0.300254449
+r2 <- 0.404541885
 
 prop=0.2
 
@@ -46,8 +44,8 @@ s2 <- c(s=2, r=r2, K=k2, X=k2*prop, p=p2, tcoef=0) #guttatus
 
 
 # t = tech, q1 = catchability species 1, q2 = catchability species 2...
-qi1 <- 0.003603335
-qi2 <- 0.000741001
+qi1 <- 0.003551859
+qi2 <- 0.000730416
 #qi3 <- 0.0006
 #qi4 <- 0.000874
 #qi5 <- 0.000874
