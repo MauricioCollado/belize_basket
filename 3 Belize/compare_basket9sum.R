@@ -95,7 +95,7 @@ BMSY4=0.5*k4
 
 
 msy_thresh=0.99999
-years=30
+years=31
 
 ########################################################################
 ########################################################################
@@ -261,6 +261,11 @@ title1 <- "Stock Black Grouper (Mycteroperca bonaci) "
 title2 <- "Stock Goliath Grouper (Epinephelus itajara)"
 title3 <- "Stock Tiger Grouper (Mycteroperca tigris)"
 title4 <- "Stock Yellowfin Grouper (Mycteroperca venenosa)"
+
+# title1 <- "Stock Black Grouper (Mycteroperca bonaci) "
+# title2 <- "Stock Goliath Grouper (Epinephelus itajara)"
+# title3 <- "Stock Tiger Grouper (Mycteroperca tigris)"
+# title4 <- "Stock Yellowfin Grouper (Mycteroperca venenosa)"
 
 subtitle1 <- "1 basket, 4 species, 1 gear type, MSY sum quota"
 
@@ -987,7 +992,7 @@ final_result <- ggplot(success_long, aes(x = bio, y = total)) + #
   geom_point(aes(color=species, size=fraction), alpha=0.2)+
   #geom_label(aes(label = fraction), size = 5) + 
   #geom_text(hjust=1.5, vjust=0, size = 5/.pt)+
-  geom_text(data = success_long%>% filter(fraction > 40), aes(label = fraction, 
+  geom_text(data = success_long%>% filter(fraction > 9), aes(label = fraction, 
                                                                        x = bio, 
                                                                        y = total), size = 2) +
   labs(title=success_title,
@@ -1005,3 +1010,218 @@ final_result <- ggplot(success_long, aes(x = bio, y = total)) + #
 final_result
 
 ggsave(plot = final_result, filename = here(fileplace, fileplace1,"figures", "final_graph.png"), height = 5, width = 8)
+
+#########################################################################
+#########################################################################
+#########################################################################
+#########################################################################
+#### new graph
+
+species1 <-  "Black grouper"
+species2 <-  "Goliath grouper"
+species3 <-  "Tiger grouper"
+species4 <-  "Yellowfin grouper"
+
+all_rev2 <- all_rev1 %>% 
+  group_by(id) %>%
+  summarise(s1=sum((s1)),
+            s2=sum((s2)),
+            s3=sum((s3)),
+            s4=sum((s4)),
+            s5=s1+s2+s3+s4,
+            .groups = 'drop') 
+
+success_bio <- bio_all %>% 
+  pivot_longer(
+    cols = starts_with("s"),
+    names_to = "species",
+    names_prefix = "s",
+    values_to = "bio",
+    values_drop_na = TRUE
+  ) %>% 
+  mutate(species = case_when(species == 1 ~ species1,
+                             species == 2 ~ species2,
+                             species == 3 ~ species3,
+                             species == 4 ~ species4,
+                             species == 5 ~ "All species")
+  )
+
+success_rev <- all_rev2 %>% 
+  pivot_longer(
+    cols = starts_with("s"),
+    names_to = "species",
+    names_prefix = "s",
+    values_to = "rev",
+    values_drop_na = TRUE
+  ) %>% 
+  mutate(species = case_when(species == 1 ~ species1,
+                             species == 2 ~ species2,
+                             species == 3 ~ species3,
+                             species == 4 ~ species4,
+                             species == 5 ~ "All species")
+  )
+
+success_long2 <- left_join(success_rev, success_bio, by=c("id", "species")) %>%  
+  mutate(fraction = as.numeric(as.character(id))) %>% 
+  drop_na(bio)
+
+
+final_result2 <- ggplot(success_long2, aes(x = bio, y = rev)) + # 
+  geom_point(aes(color=species, size=fraction), alpha=0.2)+
+  #geom_label(aes(label = fraction), size = 5) + 
+  #geom_text(hjust=1.5, vjust=0, size = 5/.pt)+
+  geom_text(data = success_long2%>% filter(fraction > 9), aes(label = fraction,
+                                                               x = bio, y = rev), size = 2) + #success_long2 
+  labs(title=success_title,
+       subtitle=subtitle1,
+       y= "Revenue ratio (no costs)",
+       x= "% of years that reach Bmsy")+
+  expand_limits(y = 0) +
+  theme_bw(base_size = 10) +
+  mytheme+
+  theme(
+    legend.justification = 'left', 
+    legend.position = 'bottom', legend.box = 'vertical', 
+    legend.box.just = 'left')
+
+final_result2
+
+ggsave(plot = final_result2, filename = here(fileplace, "all_results", "figures2", "figure2_basket9.png"), height = 5, width = 8)
+
+###################################################
+###################################################
+
+# third final graph
+
+##################################################
+
+bio_all1 <- all_outputs %>% 
+  select(-Label, -Label1) %>% 
+  mutate(bmsy_all = tot_stock/(0.5*(k1+k2+k3+k4))) %>% 
+  filter(year==30) %>% 
+  select(id, year, starts_with("bmsy"))
+
+# bio_all <- drop_na(bio_all)
+
+bio_all2 <- bio_all1 %>%
+  group_by(id) %>%
+  summarise(s1=sum(bmsy1),
+            s2=sum(bmsy2),
+            s3=sum(bmsy3),
+            s4=sum(bmsy4),
+            s5=sum(bmsy_all),
+            .groups = 'drop') %>% 
+  ungroup() %>% 
+  filter(s1>0, s2>0, s3>0, s4>0)
+
+success_bio2 <- bio_all2 %>% 
+  pivot_longer(
+    cols = starts_with("s"),
+    names_to = "species",
+    names_prefix = "s",
+    values_to = "bio",
+    values_drop_na = TRUE
+  ) %>% 
+  mutate(species = case_when(species == 1 ~ species1,
+                             species == 2 ~ species2,
+                             species == 3 ~ species3,
+                             species == 4 ~ species4,
+                             species == 5 ~ "All species")
+  )
+
+success_long3 <- left_join(success_bio2, all_profits1, by=c("id")) %>%  
+  mutate(fraction = as.numeric(as.character(id))) %>% 
+  drop_na(bio)
+
+final_result3 <- ggplot(success_long3, aes(x = bio, y = total)) + # 
+  geom_point(aes(color=species, size=fraction), alpha=0.2)+
+  #geom_label(aes(label = fraction), size = 5) + 
+  #geom_text(hjust=1.5, vjust=0, size = 5/.pt)+
+  geom_vline(xintercept = 0.99)+
+  geom_text(data = success_long3%>% filter(fraction > 76), aes(label = fraction, x = bio, y = total), size = 2) + #success_long2 
+  labs(title=success_title,
+       subtitle=subtitle1,
+       y= "Accumulated profit ratio",
+       x= "Stock/Bmsy on year 30")+
+  expand_limits(y = 0) +
+  theme_bw(base_size = 10) +
+  mytheme+
+  theme(
+    legend.justification = 'left', 
+    legend.position = 'bottom', legend.box = 'vertical', 
+    legend.box.just = 'left')
+
+final_result3
+
+ggsave(plot = final_result3, filename = here(fileplace, "all_results", "figures2", "profit1", "figure2_basket.png"), height = 5, width = 8)
+
+###################################################
+###################################################
+
+# third final graph
+
+##################################################
+
+bio_all1 <- all_outputs %>% 
+  select(-Label, -Label1) %>% 
+  mutate(bmsy_all = tot_stock/(0.5*(k1+k2+k3+k4))) %>% 
+  filter(year==30) %>% 
+  select(id, year, starts_with("bmsy"))
+
+# bio_all <- drop_na(bio_all)
+
+bio_all2 <- bio_all1 %>%
+  group_by(id) %>%
+  summarise(s1=sum(bmsy1),
+            s2=sum(bmsy2),
+            s3=sum(bmsy3),
+            s4=sum(bmsy4),
+            s5=sum(bmsy_all),
+            .groups = 'drop') %>% 
+  ungroup() %>% 
+  filter(s1>0, s2>0, s3>0, s4>0)
+
+success_bio2 <- bio_all2 %>% 
+  pivot_longer(
+    cols = starts_with("s"),
+    names_to = "species",
+    names_prefix = "s",
+    values_to = "bio",
+    values_drop_na = TRUE
+  ) %>% 
+  mutate(species = case_when(species == 1 ~ species1,
+                             species == 2 ~ species2,
+                             species == 3 ~ species3,
+                             species == 4 ~ species4,
+                             species == 5 ~ "All species")
+  )
+
+success_long3 <- left_join(success_bio2, all_profits1, by=c("id")) %>%  
+  mutate(fraction = as.numeric(as.character(id))) %>% 
+  drop_na(bio)
+
+final_result3 <- ggplot(success_long3, aes(x = bio, y = total)) + # 
+  geom_point(aes(color=species, size=fraction), alpha=0.2)+
+  #geom_label(aes(label = fraction), size = 5) + 
+  #geom_text(hjust=1.5, vjust=0, size = 5/.pt)+
+  geom_vline(xintercept = 0.99)+
+  geom_text(data = success_long3%>% filter(fraction > 35), aes(label = fraction, x = bio, y = total), size = 2) + #success_long2 
+  labs(title=success_title,
+       subtitle=subtitle1,
+       y= "Accumulated profit ratio",
+       x= "Stock/Bmsy on year 30")+
+  expand_limits(y = 0) +
+  theme_bw(base_size = 10) +
+  mytheme+
+  theme(
+    legend.justification = 'left', 
+    legend.position = 'bottom', legend.box = 'vertical', 
+    legend.box.just = 'left')
+
+final_result3
+
+ggsave(plot = final_result3, filename = here(fileplace, "all_results", "figures2", "profit1", "figure2_basket9.png"), height = 5, width = 8)
+
+
+
+
