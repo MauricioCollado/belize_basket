@@ -30,17 +30,17 @@ Belize,Sardinella spp.,NA,Sardine,0,6,bait,high,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,
 Belize,Sprattus spp.,NA,Sprat,1,6,bait,high,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
 Belize,Centropomus undecimalis,Snook,,1,7,habitats/traps/lines/nets,moderate,0,0.70970149,0.714712439,0.714712439,2419.837831,SAU,205.9351051,301.4132523,205.9351051,32.19320151,2019,36.79609532,cmsy,0.05748786,own,0.080434951
 Belize,Petenia splendida,Bay snook,,0,7,habitats/traps/lines/nets,moderate,0,0.799887753,NA,0.799887753,2419.837831,average,NA,243.0740296,243.0740296,NA,special,48.60798483,own,0.014371965,minimum/4,0.017967477
-Belize,Ictalurus furcatus,Black-eyed catfish (baca),,0,7,habitats/traps/lines/nets,moderate,0,0.437390934,NA,0.437390934,2419.837831,average,NA,577.0963702,577.0963702,NA,special,63.10418009,own,0.014371965,minimum/4,0.032858397
+Belize,Ictalurus furcatus,Black-eyed catfish,,0,7,habitats/traps/lines/nets,moderate,0,0.437390934,NA,0.437390934,2419.837831,average,NA,577.0963702,577.0963702,NA,special,63.10418009,own,0.014371965,minimum/4,0.032858397
 Belize,Cichlosomas urphthalmus,Crana,,0,7,habitats/traps/lines/nets,moderate,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
 Belize,Cichlasoma synspilum,Tuba,,0,7,habitats/traps/lines/nets,moderate,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
 Belize,Scomberomorus maculatus,Spanish mackerel,,0,8,pelagic/migratory/gear-handline,moderate,0,0.197414132,NA,0.197414132,981.7302494,average,NA,1022.915752,1022.915752,NA,special,50.48450634,own,0.006944004,minimum/4,0.035174805
 Belize,Caranx hippos,Crevalle,,0,8,pelagic/migratory/gear-handline,moderate,0,1.04713489,0.472366553,0.472366553,524.8418006,SAU,2197.851729,134.7769767,2197.851729,72.91822174,2019,259.5479112,cmsy,0.13021111,own,0.275656923
 Belize,Scomberomorus cavalla,King mackerel,,1,8,pelagic/migratory/gear-handline,moderate,0,0.156483417,0.156452943,0.156452943,1438.618698,SAU,1155.365915,1127.820328,1155.365915,17.56861966,2019,45.1900993,cmsy,0.027776014,own,0.177535903
 Belize,Scomberomorus regalis,Cerro mackerel,,0,8,pelagic/migratory/gear-handline,moderate,0,0.226627541,NA,0.226627541,981.7302494,average,NA,954.0645307,954.0645307,NA,special,54.05432464,own,0.006944004,minimum/4,0.030640599
-Belize,Mycteroperca bonaci,Black grouper,,1,9,large groupers,high,1,0.199411942,0.20423173,0.20423173,2398.503135,SAU,125.8112878,1706.000556,125.8112878,3.716100,2019,6.42,cmsy,0.006635893,own,0.032491981
+Belize,Mycteroperca bonaci,Black grouper,,1,9,large groupers,high,1,0.199411942,0.20423173,0.20423173,2398.503135,SAU,125.8112878,1706.000556,125.8112878,3.7161,2019,6.42,cmsy,0.006635893,own,0.032491981
 Belize,Epinephelus itajara,Goliath grouper,,0,9,large groupers,high,1,0.15290155,0.157670164,0.157670164,1749.819209,SAU,522.7108277,1780.174501,522.7108277,3.552349,2019,20.6,cmsy,0.001526813,own,0.009683587
-Belize,Mycteroperca tigris,Tiger grouper,,0,9,large groupers,high,1,0.320278077,#N/A,0.320278077,2074.161172,average,NA,1513.245398,1513.245398,NA,NA,61.04573413,own,0.000381703,minimum/4,0.001191787
-Belize,Mycteroperca venenosa,Yellowfin grouper,,0,9,large groupers,high,1,0.350208474,#N/A,0.350208474,2074.161172,average,NA,1465.512934,1465.512934,NA,NA,62.16823595,own,0.000381703,minimum/4,0.001089931
+Belize,Mycteroperca tigris,Tiger grouper,,0,9,large groupers,high,1,0.320278077,#N/A,0.320278077,2074.161172,average,NA,1513.245398,763.0716767,NA,NA,61.04573413,own,0.000381703,minimum/4,0.001191787
+Belize,Mycteroperca venenosa,Yellowfin grouper,,0,9,large groupers,high,1,0.350208474,#N/A,0.350208474,2074.161172,average,NA,1465.512934,710.4941251,NA,NA,62.16823595,own,0.000381703,minimum/4,0.001089931
 Belize,Lutjanus analis,Mutton snapper,,1,10,fished together/needs management,high,1,0.295407297,0.300254449,0.300254449,2590.206191,SAU,8156.871535,1552.908875,8156.871535,99.149351,2019,612.2842423,cmsy,0.003551859,own,0.011829496
 Belize,Epinephelus guttatus,Red hind,,0,10,fished together/needs management,high,1,0.400428557,0.404541885,0.404541885,1914.207227,SAU,163.6354836,1385.42284,163.6354836,0.409033,2019,16.54935175,cmsy,0.000730416,own,0.001805538
 Belize,Lachnolaimus maximus,Hogfish,,1,11,rebuild,high,0,0.677240017,0.682068627,0.682068627,520.8525468,SAU,209.7356016,325.6785252,209.7356016,26.77691154,2019,35.76351846,cmsy,0.047815913,own,0.070104256
