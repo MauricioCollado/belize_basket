@@ -139,8 +139,8 @@ baskets = list(b1)
 # input list
 # load function
 
-source(here("functions_cc_fixed", "optimal_baskets_cc_op.R"))
-source(here("functions_cc_fixed", "qb_stock_m_cc_op.R"))
+source(here("functions_cc_fixed", "optimal_baskets_cc_op1.R"))
+source(here("functions_cc_fixed", "qb_stock_m_cc_op1.R"))
 
 # loop across each scenario
 for (i in multiplier){

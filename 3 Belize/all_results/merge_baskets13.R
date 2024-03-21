@@ -212,7 +212,7 @@ basket1_harbio <- all_outputs %>%
   select(basket, per_quota, year, tot_profits, effort.t_1, starts_with("harbio")) %>% 
   pivot_longer(cols=starts_with("harbio"),
                names_to='species',
-               values_to='exploitation rate') %>% 
+               values_to='exploitation.rate') %>% 
   mutate(species = case_when(species == "harbio1" ~ species1,
                              species == "harbio2" ~ species2))
 
@@ -229,3 +229,11 @@ basket <-  left_join(basket1_bio, basket1_har, by=c('basket', "per_quota", "year
 # write
 write.table(basket, here(fileplace, "all_results","results", "basket13.csv"),
             row.names=FALSE, sep=",")
+
+atest <- basket %>% 
+  filter(exploitation.rate>1)
+
+atest1 <- basket %>% 
+  filter(effort.t_1<0)
+
+max_test <- max(atest$exploitation.rate)

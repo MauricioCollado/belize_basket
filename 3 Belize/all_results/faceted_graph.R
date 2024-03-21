@@ -1,11 +1,19 @@
 # faceted graph
 
+# package
 rm(list=ls())
 library(tidyverse)
 library(here)
 
+
+#files
 results <- read_csv(here("3 Belize", "all_results", "results", "result_basket.csv")) 
 #results[with(results, order(per_quota, year)),]
+
+species <- read_csv(here("belize_data", "dataset", "species_belize.csv")) 
+
+species_k <- species %>% 
+  select(comm_name, basket, k_used)
 
 # experiment
 

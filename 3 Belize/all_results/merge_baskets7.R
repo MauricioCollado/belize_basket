@@ -66,9 +66,10 @@ df_col <- df %>%
 
 output_base <- df_col %>% 
   mutate(year = rep(seq(0,30), times=100), # before times = 20
-         harbio1= harvest.s_1/lag(stock.s_1),
-         harbio2= harvest.s_2/lag(stock.s_2),
-         harbio3= harvest.s_3/lag(stock.s_3))
+      harbio1= harvest.s_1/lag(stock.s_1),
+       harbio2= harvest.s_2/lag(stock.s_2),
+      harbio3= harvest.s_3/lag(stock.s_3))
+
 
 #Group them
 
@@ -219,12 +220,12 @@ basket1_harbio <- all_outputs %>%
   select(basket, per_quota, year, tot_profits, effort.t_1, starts_with("harbio")) %>% 
   pivot_longer(cols=starts_with("harbio"),
                names_to='species',
-               values_to='exploitation rate') %>% 
+               values_to='exploitation.rate') %>% 
   mutate(species = case_when(species == "harbio1" ~ species1,
                              species == "harbio2" ~ species2,
                              species == "harbio3" ~ species3))
 
-basket1_harbio[is.na(basket1_harbio)] <- 0
+#basket1_harbio[is.na(basket1_harbio)] <- 0
                       
 # join
 basket <-  left_join(basket1_bio, basket1_har, by=c('basket', "per_quota", "year", 
@@ -237,3 +238,11 @@ basket <-  left_join(basket1_bio, basket1_har, by=c('basket', "per_quota", "year
 # write
 write.table(basket, here(fileplace, "all_results","results", "basket7.csv"),
             row.names=FALSE, sep=",")
+
+atest <- basket %>% 
+  filter(exploitation.rate>1)
+
+atest1 <- basket %>% 
+  filter(effort.t_1<0)
+
+max_test <- max(atest$exploitation.rate)

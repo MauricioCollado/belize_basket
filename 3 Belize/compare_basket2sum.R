@@ -1367,15 +1367,16 @@ success_bio2 <- bio_all2 %>%
   )
 
 success_long3 <- left_join(success_bio2, all_profits1, by=c("id")) %>%  
-  mutate(fraction = as.numeric(as.character(id))) %>% 
-  drop_na(bio)
+  mutate(fraction = as.numeric(as.character(id))) 
+
+max_icon <- max(success_long3$fraction)-1
 
 final_result3 <- ggplot(success_long3, aes(x = bio, y = total)) + # 
   geom_point(aes(color=species, size=fraction), alpha=0.2)+
   #geom_label(aes(label = fraction), size = 5) + 
   #geom_text(hjust=1.5, vjust=0, size = 5/.pt)+
   geom_vline(xintercept = 0.99)+
-  geom_text(data = success_long3%>% filter(fraction > 73), aes(label = fraction, x = bio, y = total), size = 2) + #success_long2 
+  geom_text(data = success_long3%>% filter(fraction > max_icon ), aes(label = fraction, x = bio, y = total), size = 2) + #success_long2 
   labs(title=success_title,
        subtitle=subtitle1,
        y= "Accumulated profit ratio",
