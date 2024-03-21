@@ -7,13 +7,17 @@ library(here)
 
 
 #files
-results <- read_csv(here("3 Belize", "all_results", "results", "result_basket.csv")) 
+results <- read_csv(here("3 Belize", "all_results", "results", "final", "result_basket.csv")) 
 #results[with(results, order(per_quota, year)),]
+
+max_rate <- max(results$exploitation.rate, na.rm=T)
 
 species <- read_csv(here("belize_data", "dataset", "species_belize.csv")) 
 
 species_k <- species %>% 
-  select(comm_name, basket, k_used)
+  select(comm_name, basket, k_used) %>% 
+  mutate(category="biomass",
+         species=comm_name)
 
 # experiment
 
@@ -76,8 +80,34 @@ results1 <- result1 %>%
                names_to='category',
                values_to='result') 
 
+results1_k <- results1 %>% 
+  select(basket, year, species, category) %>% 
+  filter(category=="biomass")
+
+results1_k_all <- left_join(results1_k, species_k, by=c("basket", "species", "category")) %>% 
+  select(-comm_name)
+
 results_b1 <- ggplot(data=results1%>% filter(basket ==1), aes(x=year, y=result, group=per_quota)) + 
   geom_line(aes(color=per_quota)) +
+  geom_line(data = results1_k_all %>%  filter(basket ==1), aes(x=year, y=k_used))+
+  labs(x="Year", 
+       y="",
+       title="Basket 1") + 
+  facet_grid(category ~ species, scales = "free_y", switch = "y")+
+  theme(legend.position="bottom",
+        axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        legend.text = element_text(size = 6),
+        axis.title.x = element_text(size = 6),
+        strip.text = element_text(size = 7))+
+  labs(colour="Quota percentage")
+
+
+results_b1 
+
+results_b1 <- ggplot(data=results1%>% filter(basket ==1), aes(x=year, y=result, group=per_quota)) + 
+  geom_line(aes(color=per_quota)) +
+  geom_line(data = results1_k_all %>%  filter(basket ==1), aes(x=year, y=k_used))+
   labs(x="Year", 
        y="",
        title="Basket 1") + 

@@ -248,7 +248,9 @@ basket <-  left_join(basket1_bio, basket1_har, by=c('basket', "per_quota", "year
   left_join(., basket1_rev, by=c('basket', "per_quota", "year", 
                                  "tot_profits", "effort.t_1", "species")) %>% 
   left_join(., basket1_harbio, by=c('basket', "per_quota", "year", 
-                                    "tot_profits", "effort.t_1", "species"))
+                                    "tot_profits", "effort.t_1", "species")) %>% 
+  mutate(exploitation.rate=round(exploitation.rate, 2))
+
 
 
 # write
@@ -261,4 +263,6 @@ atest <- basket %>%
 atest1 <- basket %>% 
   filter(effort.t_1<0)
 
-max_test <- max(atest$exploitation.rate)
+max_test <- max(basket$exploitation.rate, na.rm=T)
+
+max_test1 <- max(basket$exploitation.rate, na.rm=T)

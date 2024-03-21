@@ -56,5 +56,7 @@ df_col <- df %>%
 result_basket <- df_col %>% 
   select(-id)
 
-write.table(result_basket, here(fileplace, "all_results","results", "result_basket.csv"),
+#max_test1 <- max(result_basket$exploitation.rate, na.rm=T)
+
+write.table(result_basket, here(fileplace, "all_results","results", "final", "result_basket.csv"),
             row.names=FALSE, sep=",")
