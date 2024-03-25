@@ -54,7 +54,8 @@ df_col <- df %>%
 
 
 result_basket <- df_col %>% 
-  select(-id)
+  select(-id) %>% 
+  filter(!is.na(species))
 
 # correct some names
 result_basket$species[result_basket$species == "cubera snapper"] = "Cubera snapper"

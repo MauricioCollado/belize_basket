@@ -66,8 +66,9 @@ df_col <- df %>%
 
 output_base <- df_col %>% 
   mutate(year = rep(seq(0,30), times=100), # before times = 20
-         harbio1= harvest.s_1/lag(stock.s_1),
-         harbio2= harvest.s_2/lag(stock.s_2))
+         harbio1= harvest.s_1/(stock_g.sg_1),
+         harbio2= harvest.s_2/(stock_g.sg_2))
+
 
 #Group them
 

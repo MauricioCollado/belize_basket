@@ -96,14 +96,14 @@ years=30
 
 output_base <- df_col %>% 
   mutate(year = rep(seq(0,30), times=100), 
-         harbio1= harvest.s_1/lag(stock.s_1),
-         harbio2= harvest.s_2/lag(stock.s_2),
-         harbio3= harvest.s_3/lag(stock.s_3),
-         harbio4= harvest.s_4/lag(stock.s_4),
-         harbio5= harvest.s_5/lag(stock.s_5),
-         harbio6= harvest.s_6/lag(stock.s_6),
-         harbio7= harvest.s_7/lag(stock.s_7),
-         harbio8= harvest.s_8/lag(stock.s_8))
+         harbio1= harvest.s_1/(stock_g.sg_1),
+         harbio2= harvest.s_2/(stock_g.sg_2),
+         harbio3= harvest.s_3/(stock_g.sg_3),
+         harbio4= harvest.s_4/(stock_g.sg_4),
+         harbio5= harvest.s_5/(stock_g.sg_5),
+         harbio6= harvest.s_6/(stock_g.sg_6),
+         harbio7= harvest.s_7/(stock_g.sg_7),
+         harbio8= harvest.s_8/(stock_g.sg_8))
 
 #Group them
 
